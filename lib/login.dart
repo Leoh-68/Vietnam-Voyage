@@ -63,6 +63,7 @@ class LoginPageState extends State<LoginPage> {
                                 labelStyle: TextStyle(color: Colors.black))),
                         const Padding(padding: EdgeInsets.only(bottom: 10)),
                         TextField(
+                          obscureText: true,
                           controller: _pass,
                           decoration: const InputDecoration(
                               filled: true,
