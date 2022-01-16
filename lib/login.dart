@@ -1,3 +1,4 @@
+import 'package:template/api.dart';
 import 'package:template/error.dart';
 import 'package:template/loading.dart';
 import 'package:flutter/material.dart';
@@ -83,66 +84,85 @@ class LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: SizedBox(
                             height: 50,
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {});
-                                if (_username.text == "a" &&
-                                    _pass.text == "a") {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      PageRouteBuilder(pageBuilder:
-                                          (BuildContext context,
-                                              Animation animation,
-                                              Animation secondaryAnimation) {
-                                        return const LoadingScreen();
-                                      }, transitionsBuilder: (BuildContext
+                            child: FutureBuilder(
+                              future: api_Check_Tai_Khoan(
+                                  _username.text, _pass.text),
+                              builder: (context, snapshot) {
+                                return snapshot.hasData
+                                    ? TextButton(
+                                        onPressed: () {
+                                          setState(() {});
+                                          if (snapshot.data == "1") {
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                PageRouteBuilder(pageBuilder:
+                                                    (BuildContext context,
+                                                        Animation animation,
+                                                        Animation
+                                                            secondaryAnimation) {
+                                                  return const LoadingScreen();
+                                                }, transitionsBuilder:
+                                                    (BuildContext context,
+                                                        Animation<double>
+                                                            animation,
+                                                        Animation<double>
+                                                            secondaryAnimation,
+                                                        Widget child) {
+                                                  return SlideTransition(
+                                                    position: Tween<Offset>(
+                                                      begin: const Offset(
+                                                          1.0, 0.0),
+                                                      end: Offset.zero,
+                                                    ).animate(animation),
+                                                    child: child,
+                                                  );
+                                                }),
+                                                (Route route) => false);
+                                          } else {
+                                            Navigator.push(
                                               context,
-                                          Animation<double> animation,
-                                          Animation<double> secondaryAnimation,
-                                          Widget child) {
-                                        return SlideTransition(
-                                          position: Tween<Offset>(
-                                            begin: const Offset(1.0, 0.0),
-                                            end: Offset.zero,
-                                          ).animate(animation),
-                                          child: child,
-                                        );
-                                      }),
-                                      (Route route) => false);
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (BuildContext context,
-                                          Animation animation,
-                                          Animation secondaryAnimation) {
-                                        return const ErrorPage();
-                                      },
-                                      transitionsBuilder: (BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secondaryAnimation,
-                                          Widget child) {
-                                        return SlideTransition(
-                                          position: Tween<Offset>(
-                                            begin: const Offset(1.0, 0.0),
-                                            end: Offset.zero,
-                                          ).animate(animation),
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }
+                                              PageRouteBuilder(
+                                                pageBuilder: (BuildContext
+                                                        context,
+                                                    Animation animation,
+                                                    Animation
+                                                        secondaryAnimation) {
+                                                  return const ErrorPage();
+                                                },
+                                                transitionsBuilder:
+                                                    (BuildContext context,
+                                                        Animation<double>
+                                                            animation,
+                                                        Animation<double>
+                                                            secondaryAnimation,
+                                                        Widget child) {
+                                                  return SlideTransition(
+                                                    position: Tween<Offset>(
+                                                      begin: const Offset(
+                                                          1.0, 0.0),
+                                                      end: Offset.zero,
+                                                    ).animate(animation),
+                                                    child: child,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith((states) =>
+                                                        Colors.black)),
+                                        child: const Text(
+                                          "Sign in",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                      )
+                                    : const CircularProgressIndicator();
                               },
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) => Colors.black)),
-                              child: const Text(
-                                "Sign in",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
                             ),
                           ),
                         ),
