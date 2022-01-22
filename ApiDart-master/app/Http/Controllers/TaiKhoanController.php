@@ -10,10 +10,13 @@ class TaiKhoanController extends Controller
     public function dangnhap(Request $rq)
     {
         $user = TaiKhoan::where('UserName',$rq->username)->first();
-        if($user == null){
-            return 0;
+        if($user!=null){
+            return 1;
         }
-        else
-        return 1;
+    }
+    public function laydstaikhoan()
+    {
+        $dstk = Taikhoan::all();
+        return $dstk;
     }
 }

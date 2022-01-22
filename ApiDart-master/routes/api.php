@@ -32,3 +32,5 @@ Route::post('LayDiaDanhTheoId', [ShareController::class,'LayDiaDanhTheoId']);
 Route::post('LayDiaDanhHotNhat', [ShareController::class,'LayDiaDanhHotNhat']);
 
 Route::post('CheckTaiKhoan', [TaiKhoanController::class,'dangnhap']);
+
+Route::get('LayDSTaiKhoan', [TaiKhoanController::class,'laydstaikhoan']);
