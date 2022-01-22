@@ -1,4 +1,4 @@
-import 'package:template/api.dart';
+import 'package:template/Api/api.dart';
 import 'package:template/error.dart';
 import 'package:template/loading.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +30,7 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.userName!.contains(username) &&
-          taiK.password!.contains(password)) {
+      if (taiK.userName!.contains(username) && taiK.password!.contains(password)) {
         check = true;
       }
     }
@@ -48,6 +47,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromRGBO(154, 175, 65, 1),
@@ -62,12 +62,9 @@ class LoginPageState extends State<LoginPage> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage("images/VV_icon.png")),
+                            image: DecorationImage(fit: BoxFit.cover, image: AssetImage("images/VV_icon.png")),
                             border: Border.all(color: Colors.white, width: 10),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(250)),
+                            borderRadius: BorderRadius.all(Radius.circular(250)),
                           ),
                           height: 250,
                           width: 250,
@@ -108,12 +105,8 @@ class LoginPageState extends State<LoginPage> {
                                   if (isLoading) {
                                     return;
                                   }
-                                  if (_username.text.isEmpty ||
-                                      _pass.text.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "Vui lòng nhập Username và Password")));
+                                  if (_username.text.isEmpty || _pass.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Vui lòng nhập Username và Password")));
                                     return;
                                   }
                                   if (LoginCheck(_username.text, _pass.text)) {
@@ -122,17 +115,10 @@ class LoginPageState extends State<LoginPage> {
                                     });
                                     Navigator.pushAndRemoveUntil(
                                         context,
-                                        PageRouteBuilder(pageBuilder:
-                                            (BuildContext context,
-                                                Animation animation,
-                                                Animation secondaryAnimation) {
+                                        PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
                                           return const LoadingScreen();
                                         }, transitionsBuilder:
-                                            (BuildContext context,
-                                                Animation<double> animation,
-                                                Animation<double>
-                                                    secondaryAnimation,
-                                                Widget child) {
+                                            (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                                           return SlideTransition(
                                             position: Tween<Offset>(
                                               begin: const Offset(1.0, 0.0),
@@ -145,14 +131,10 @@ class LoginPageState extends State<LoginPage> {
                                   }
                                   setState(() {});
                                 },
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.resolveWith(
-                                            (states) => Colors.black)),
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.black)),
                                 child: const Text(
                                   "Sign in",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                               )),
                         ),

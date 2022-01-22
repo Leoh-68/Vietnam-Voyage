@@ -34,3 +34,15 @@ Route::post('LayDiaDanhHotNhat', [ShareController::class,'LayDiaDanhHotNhat']);
 Route::post('CheckTaiKhoan', [TaiKhoanController::class,'dangnhap']);
 
 Route::get('LayDSTaiKhoan', [TaiKhoanController::class,'laydstaikhoan']);
+
+Route::get('PostShare', [ShareController::class,'baiShare']);
+
+Route::get('PostShareHome', [ShareController::class,'baiShareHome']);
+
+Route::get('likePost', [ShareController::class,'likePost']);
+
+Route::get('relikePost', [ShareController::class,'relikePost']);
+
+Route::get('unlikePost', [ShareController::class,'unlikePost']);
+
+Route::get('reunlikePost', [ShareController::class,'reunlikePost']);

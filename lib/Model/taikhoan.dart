@@ -1,3 +1,5 @@
+import 'package:template/Model/share.dart';
+
 class TaiKhoan {
   int? id;
   String? userName;
@@ -6,16 +8,8 @@ class TaiKhoan {
   String? email;
   String? sDT;
   String? status;
-
-  TaiKhoan({
-    this.id,
-    this.userName,
-    this.password,
-    this.hoTen,
-    this.email,
-    this.sDT,
-    this.status,
-  });
+  List<Share>? share;
+  TaiKhoan({this.id, this.userName, this.password, this.hoTen, this.email, this.sDT, this.status});
 
   TaiKhoan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -36,7 +30,6 @@ class TaiKhoan {
     data['Email'] = this.email;
     data['SDT'] = this.sDT;
     data['Status'] = this.status;
-
     return data;
   }
 }
