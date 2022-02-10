@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Share extends Model
 {
-    protected $table = 'share';
+    protected $table = 'chiase';
     use HasFactory;
     protected $fillable = [
         'BaiViet',
@@ -19,10 +19,10 @@ class Share extends Model
     ];
     public function DiaDanh()
     {
-        return $this->belongsTo(DiaDanh::class, 'DiaDanhId');
+        return $this->belongsTo(DiaDanh::class, 'diadanhid');
     }
     public function TaiKhoan()
     {
-        return $this->belongsTo(TaiKhoan::class, 'TaiKhoanId');
+        return $this->belongsTo(TaiKhoan::class, 'taikhoanid');
     }
 }
