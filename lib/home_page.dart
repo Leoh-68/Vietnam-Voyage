@@ -60,12 +60,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                         children: [
                                           TextButton(
                                             child: Container(
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
                                                 height: 200,
                                                 width: dvsize.width - 32,
                                                 child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    child: Image(image: AssetImage('images/' + snapshot.data![index].hinhAnh!), fit: BoxFit.cover))),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image(
+                                                        image: AssetImage(
+                                                            'images/' +
+                                                                snapshot
+                                                                    .data![
+                                                                        index]
+                                                                    .hinhAnh!),
+                                                        fit: BoxFit.cover))),
                                             onPressed: () {},
                                           )
                                         ],
@@ -76,15 +88,21 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               TextButton(
                                 child: Container(
-                                  padding: EdgeInsets.only(bottom: 10, left: 10),
+                                  padding:
+                                      EdgeInsets.only(bottom: 10, left: 10),
                                   child: Align(
                                     alignment: Alignment.bottomLeft,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          snapshot.data![index].tenDiaDanh!.toString(),
-                                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                          snapshot.data![index].tenDiaDanh!
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Text(snapshot.data![index].viTri!,
                                             style: TextStyle(
@@ -99,17 +117,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (contex) => Detail(
-                                              mota: snapshot.data![index].moTa.toString(),
-                                              id: snapshot.data![index].id.toString(),
-                                              name: snapshot.data![index].tenDiaDanh.toString(),
-                                              location: snapshot.data![index].viTri!,
-                                              image: snapshot.data![index].hinhAnh!)));
+                                              mota: snapshot.data![index].moTa
+                                                  .toString(),
+                                              id: snapshot.data![index].id
+                                                  .toString(),
+                                              name: snapshot
+                                                  .data![index].tenDiaDanh
+                                                  .toString(),
+                                              location:
+                                                  snapshot.data![index].viTri!,
+                                              image: snapshot
+                                                  .data![index].hinhAnh!)));
                                 },
                               )
                             ],
                           );
                         })
-                    : const Center(child: Padding(padding: EdgeInsets.only(top: 250), child: CircularProgressIndicator()));
+                    : const Center(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 250),
+                            child: CircularProgressIndicator()));
               }));
     }
 
@@ -124,9 +151,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: 300,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage('images/' + snapshot.data!.hinhAnh!), fit: BoxFit.cover),
-                            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
-                            boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6)]),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'images/' + snapshot.data!.hinhAnh!),
+                                fit: BoxFit.cover),
+                            borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15)),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 6)
+                            ]),
                       ),
                       Positioned(
                           left: 20,
@@ -136,7 +173,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               Text(
                                 snapshot.data!.tenDiaDanh.toString(),
-                                style: const TextStyle(letterSpacing: 1.5, color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    letterSpacing: 1.5,
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -173,7 +214,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     style: const TextStyle(color: Colors.white),
                     controller: _controller,
-                    decoration: const InputDecoration(border: InputBorder.none, hintText: 'Tìm kiếm', hintStyle: TextStyle(color: Colors.white)),
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Tìm kiếm',
+                        hintStyle: TextStyle(color: Colors.white)),
                     onChanged: (String value) {
                       setState(
                         () {
@@ -190,7 +234,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 setState(() {
                   if (typing == true) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Search(name: _controller.text)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Search(name: _controller.text)));
                   }
                   typing = !typing;
                 });
@@ -205,7 +253,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 height: 95,
                 child: DrawerHeader(
-                  decoration: BoxDecoration(color: Color.fromRGBO(154, 175, 65, 1)),
+                  decoration:
+                      BoxDecoration(color: Color.fromRGBO(154, 175, 65, 1)),
                   child: Row(
                     children: [
                       CircleAvatar(
@@ -226,10 +275,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+                      pageBuilder: (BuildContext context, Animation animation,
+                          Animation secondaryAnimation) {
                         return const Profile();
                       },
-                      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+                      transitionsBuilder: (BuildContext context,
+                          Animation<double> animation,
+                          Animation<double> secondaryAnimation,
+                          Widget child) {
                         return SlideTransition(
                           position: Tween<Offset>(
                             begin: const Offset(1.0, 0.0),
@@ -249,10 +302,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+                        pageBuilder: (BuildContext context, Animation animation,
+                            Animation secondaryAnimation) {
                           return LoginPage();
                         },
-                        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+                        transitionsBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                            Widget child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0),
@@ -277,7 +334,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   height: 50,
                   width: ((dvsize.width - 18) / 100) * 25,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(191, 255, 252, 1)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(191, 255, 252, 1)),
                   child: IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.home),
@@ -286,7 +345,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   height: 50,
                   width: ((dvsize.width - 18) / 100) * 25,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(240, 227, 255, 1)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(240, 227, 255, 1)),
                   child: IconButton(
                     onPressed: () {},
                     icon: Image.asset('images/mountain.png'),
@@ -295,7 +356,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   height: 50,
                   width: ((dvsize.width - 18) / 100) * 25,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(255, 255, 255, 1)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(255, 255, 255, 1)),
                   child: IconButton(
                     onPressed: () {},
                     icon: Image.asset('images/sea.png'),
@@ -304,10 +367,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   height: 50,
                   width: ((dvsize.width - 18) / 100) * 25,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(191, 255, 252, 1)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(191, 255, 252, 1)),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Post()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Post()));
                     },
                     icon: Icon(Icons.content_paste_outlined),
                   ),
@@ -342,12 +410,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Row(
                                         children: [
                                           Container(
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
                                               height: 100,
                                               width: 100,
                                               child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  child: Image(image: AssetImage('images/1.jpg'), fit: BoxFit.cover))),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image(
+                                                      image: AssetImage(
+                                                          'images/1.jpg'),
+                                                      fit: BoxFit.cover))),
                                         ],
                                       ),
                                     ),
