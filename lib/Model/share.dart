@@ -6,6 +6,7 @@ class Share {
   String? taiKhoanId;
   String? liked;
   String? unliked;
+  String? created;
 
   Share({this.id, this.baiViet, this.danhGia, this.diaDanhId, this.taiKhoanId, this.liked, this.unliked});
 
@@ -15,10 +16,10 @@ class Share {
     danhGia = json['DanhGia'];
     diaDanhId = json['DiaDanhId'];
     taiKhoanId = json['TaiKhoanId'];
+    created = json['created_at'];
     liked = json['Liked'];
     unliked = json['Unliked'];
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;

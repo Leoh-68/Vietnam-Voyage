@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('DiaDanh',[DiaDanhController::class,'LayDiaDanh']);
-Route::get('TaiKhoan',[DiaDanhController::class,'GetTaiKhoan']);
+Route::post('TaiKhoan',[DiaDanhController::class,'GetTaiKhoan']);
 
 Route::post('TimKiem',[DiaDanhController::class,'TimKiem']);
 
@@ -46,3 +46,20 @@ Route::get('relikePost', [ShareController::class,'relikePost']);
 Route::get('unlikePost', [ShareController::class,'unlikePost']);
 
 Route::get('reunlikePost', [ShareController::class,'reunlikePost']);
+
+Route::post('accountinfo', [TaiKhoanController::class,'layTaiKhoan']);
+
+Route::get('ViTri',[DiaDanhController::class,'layToaDoTheoID']);
+
+Route::post('dangky', [TaiKhoanController::class,'register']);
+
+Route::get('countlike', [ShareController::class,'countlike']);
+
+Route::get('countunlike', [ShareController::class,'countunlike']);
+
+Route::get('liked', [ShareController::class,'liked']);
+Route::get('unliked', [ShareController::class,'unliked']);
+
+Route::post('checkTrung',[TaiKhoanController::class,'checkTrung']);
+
+Route::get('luutru',[DiaDanhController::class,'luutru']);

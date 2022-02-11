@@ -1,16 +1,62 @@
+import 'package:template/ApiFolder/list_luu_tru.dart';
+import 'package:template/Model/luu_tru.dart';
+import 'package:template/Model/vi_tri.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:template/ApiFolder/dia_danh_share.dart';
+import 'package:template/Api/api.dart';
+import 'package:template/taikhoan.dart';
+import 'package:map_launcher/map_launcher.dart';
 
-class Detail extends StatelessWidget {
+class Detail extends StatefulWidget {
   final String name;
   final String location;
   final String image;
   final String id;
   final String mota;
-  Detail({Key? key, required this.mota, required this.name, required this.id, required this.location, required this.image}) : super(key: key);
+  final String username;
+  final String password;
+  const Detail(
+      {Key? key,
+      required this.name,
+      required this.mota,
+      required this.id,
+      required this.location,
+      required this.image,
+      required this.username,
+      required this.password})
+      : super(key: key);
+  @override
+  State<Detail> createState() => _DetailState();
+}
+
+class _DetailState extends State<Detail> {
   bool typing = false;
+  TaiKhoan user1 = TaiKhoan();
+  ViTri vitri = ViTri();
+  @override
+  void initState() {
+    super.initState();
+    api_lay_tai_khoan(widget.username, widget.password).then((value) {
+      setState(() {
+        user1 = value;
+      });
+    });
+    api_GetLocation(widget.id).then((value) {
+      setState(() {
+        vitri = value;
+      });
+    });
+  }
+
+  void GGMap(String kinhdo, String vido) async {
+    final availableMaps = await MapLauncher.installedMaps;
+    await availableMaps.first.showMarker(
+      coords: Coords(double.parse(kinhdo), double.parse(vido)),
+      title: "Ocean Beach",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +94,7 @@ class Detail extends StatelessWidget {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        "Trần Phước Khánh",
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -63,7 +109,7 @@ class Detail extends StatelessWidget {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(username: widget.username, password: widget.password);
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -111,7 +157,7 @@ class Detail extends StatelessWidget {
                 height: 300,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('images/' + image), fit: BoxFit.cover),
+                    image: DecorationImage(image: AssetImage('images/' + widget.image), fit: BoxFit.cover),
                     borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                     boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6)]),
               ),
@@ -122,7 +168,7 @@ class Detail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        widget.name,
                         style: const TextStyle(letterSpacing: 1.5, color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Row(
@@ -135,7 +181,7 @@ class Detail extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                              location,
+                              widget.location,
                               style: const TextStyle(color: Colors.white),
                             ),
                           )
@@ -150,45 +196,49 @@ class Detail extends StatelessWidget {
             children: [
               Container(
                 height: 50,
-                width: ((dvsize.width - 18) / 100) * 25,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.grey),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_up),
-                ),
-              ),
-              Container(
-                height: 50,
-                width: ((dvsize.width - 18) / 100) * 25,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.grey),
+                width: ((dvsize.width - 18) / 100) * 33.3,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.blue),
                 child: IconButton(
                   onPressed: () {
-                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => Search(name: _controller.text)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LuuTruList(
+                                  username: widget.username,
+                                  password: widget.password,
+                                  id: widget.id,
+                                )));
                   },
-                  icon: const Icon(Icons.thumb_down),
+                  icon: const Icon(Icons.list),
                 ),
               ),
               Container(
                 height: 50,
-                width: ((dvsize.width - 18) / 100) * 25,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.grey),
+                width: ((dvsize.width - 18) / 100) * 33.3,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.blue),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      GGMap(vitri.kinhDo.toString(), vitri.viDo.toString());
+                    });
+                  },
                   icon: const Icon(Icons.map),
                 ),
               ),
               Container(
                 height: 50,
-                width: ((dvsize.width - 18) / 100) * 25,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.grey),
+                width: ((dvsize.width - 18) / 100) * 33.3,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.blue),
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => Sharea(
-                                  id: id,
-                                  idaccount: "1",
+                                  username: widget.username,
+                                  password: widget.password,
+                                  id: widget.id,
+                                  idaccount: user1.id.toString(),
                                 )));
                   },
                   icon: const Icon(Icons.share),
@@ -197,9 +247,16 @@ class Detail extends StatelessWidget {
             ],
           ),
           Container(
+            padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+            child: Text(
+              'Giới thiệu',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
               padding: EdgeInsets.all(10),
               child: Text(
-                mota,
+                widget.mota,
                 style: TextStyle(fontSize: 20),
               ))
         ]));

@@ -1,7 +1,9 @@
+import 'package:flutter/painting.dart';
 import 'package:template/Api/api.dart';
 import 'package:template/error.dart';
 import 'package:template/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:template/register.dart';
 import 'package:template/taikhoan.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,8 +20,8 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _username = TextEditingController();
-    _pass = TextEditingController();
+    _username = TextEditingController(text: "admin");
+    _pass = TextEditingController(text: "admin");
     api_lay_ds_tai_khoan().then((value) {
       setState(() {
         TK = value;
@@ -89,6 +91,17 @@ class LoginPageState extends State<LoginPage> {
                               labelText: 'Mật khẩu',
                               labelStyle: TextStyle(color: Colors.black)),
                         ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
+                            },
+                            child: Align(
+                              child: Text(
+                                "Đăng ký",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              alignment: Alignment.topLeft,
+                            ))
                       ],
                     ),
                   ),
@@ -116,7 +129,10 @@ class LoginPageState extends State<LoginPage> {
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                                          return const LoadingScreen();
+                                          return LoadingScreen(
+                                            username: _username.text,
+                                            password: _pass.text,
+                                          );
                                         }, transitionsBuilder:
                                             (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                                           return SlideTransition(

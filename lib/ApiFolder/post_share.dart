@@ -1,26 +1,34 @@
 import 'package:template/Api/api.dart';
+import 'package:template/api.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:template/Model/share.dart';
+import 'package:template/taikhoan.dart';
+
 class Post extends StatefulWidget {
-  const Post({
-    Key? key,
-  }) : super(key: key);
+  final String username;
+  final String password;
+  final TaiKhoan account;
+  const Post({Key? key, required this.username, required this.password, required this.account}) : super(key: key);
   @override
   State<Post> createState() => _PostState();
 }
+
 class _PostState extends State<Post> {
   int countter = 2;
   bool typing = false;
   String text = "";
   String location = "3";
-  String like = "0";
+  late String like;
   String unlike = "0";
-  bool liked = false;
-  bool unliked = false;
   Color likecolor = Colors.black;
   Color unlikecolor = Colors.black;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var dvsize = MediaQuery.of(context).size;
@@ -50,7 +58,7 @@ class _PostState extends State<Post> {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        "Trần Phước Khánh",
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -65,7 +73,7 @@ class _PostState extends State<Post> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(username: widget.username, password: widget.password);
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -113,8 +121,6 @@ class _PostState extends State<Post> {
                   ? ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, int index) {
-                        like = snapshot.data![index].liked.toString();
-                        unlike = snapshot.data![index].unliked.toString();
                         return snapshot.hasData
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
@@ -155,57 +161,82 @@ class _PostState extends State<Post> {
                                           children: [
                                             IconButton(
                                                 onPressed: () {
-                                                  if (unliked == false) {
-                                                    if (liked == false) {
-                                                      setState(() {
-                                                        api_Like(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                                        liked = true;
-                                                        likecolor = Colors.red;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        api_reLike(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                                        liked = false;
-                                                        likecolor = Colors.black;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    null;
-                                                  }
+                                                  late String unlike;
+                                                  late String like;
+                                                  api_liked(widget.account.id.toString(), snapshot.data![index].id.toString()).then((value) {
+                                                    setState(() {
+                                                      like = value;
+                                                      if (like != "0") {
+                                                        setState(() {
+                                                          api_reLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                                            like = value;
+                                                            setState(() {
+                                                              likecolor = Colors.black;
+                                                            });
+                                                          });
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          api_Like(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                                            like = value;
+                                                            setState(() {
+                                                              likecolor = Colors.red;
+                                                            });
+                                                          });
+                                                        });
+                                                      }
+                                                    });
+                                                  });
                                                 },
                                                 icon: Icon(
                                                   Icons.favorite,
                                                   color: likecolor,
                                                 )),
-                                            Text(like)
+                                            FutureBuilder(
+                                                future: api_countlike(snapshot.data![index].id.toString()),
+                                                builder: (contex, snapshot1) {
+                                                  return snapshot1.hasData ? Text(snapshot1.data!.toString()) : CircularProgressIndicator();
+                                                })
                                           ],
                                         ),
                                         Row(
                                           children: [
                                             IconButton(
                                                 onPressed: () {
-                                                  if (liked == false) {
-                                                    if (unliked == false) {
-                                                      setState(() {
-                                                        api_UnLike(snapshot.data![index].id.toString()).then((value) => {unlike = value});
-                                                        unliked = true;
-                                                        unlikecolor = Colors.red;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        api_reUnLike(snapshot.data![index].id.toString()).then((value) => {
-                                                              unlike = value,
+                                                  late String unlike;
+                                                  late String like;
+                                                  api_unliked(widget.account.id.toString(), snapshot.data![index].id.toString()).then((value) {
+                                                    setState(() {
+                                                      like = value;
+                                                      if (like != "0") {
+                                                        setState(() {
+                                                          api_reUnLike(snapshot.data![index].id.toString(), widget.account.id.toString())
+                                                              .then((value) {
+                                                            like = value;
+                                                            setState(() {
+                                                              likecolor = Colors.black;
                                                             });
-                                                        unliked = false;
-                                                        unlikecolor = Colors.black;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    null;
-                                                  }
+                                                          });
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          api_UnLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                                            like = value;
+                                                            setState(() {
+                                                              likecolor = Colors.red;
+                                                            });
+                                                          });
+                                                        });
+                                                      }
+                                                    });
+                                                  });
                                                 },
                                                 icon: Icon(Icons.thumb_down_alt, color: unlikecolor)),
-                                            Text(unlike)
+                                            FutureBuilder(
+                                                future: api_countunlike(snapshot.data![index].id.toString()),
+                                                builder: (contex, snapshot1) {
+                                                  return snapshot1.hasData ? Text(snapshot1.data!.toString()) : CircularProgressIndicator();
+                                                })
                                           ],
                                         ),
                                         Container(

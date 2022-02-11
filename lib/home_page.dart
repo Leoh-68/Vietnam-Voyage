@@ -1,3 +1,5 @@
+import 'package:template/taikhoan.dart';
+
 import 'login.dart';
 import 'profile.dart';
 import 'Model/dia_danh.dart';
@@ -8,6 +10,10 @@ import 'ApiFolder/dia_danh_show.dart';
 import 'dia_danh_search.dart';
 
 class MyHomePage extends StatefulWidget {
+  final String username;
+  final String password;
+  const MyHomePage({Key? key, required this.username, required this.password}) : super(key: key);
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -19,10 +25,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String text = "";
   String location = "3";
   late TextEditingController _controller;
-
+ TaiKhoan account = new TaiKhoan();
   @override
   void initState() {
     super.initState();
+    setState(() {
+      api_lay_tai_khoan(widget.username, widget.password).then((value) {
+        account = value;
+      });
+    });
     _controller = TextEditingController();
   }
 
@@ -99,6 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (contex) => Detail(
+                                              username: widget.username,
+                                              password: widget.password,
                                               mota: snapshot.data![index].moTa.toString(),
                                               id: snapshot.data![index].id.toString(),
                                               name: snapshot.data![index].tenDiaDanh.toString(),
@@ -190,7 +203,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 setState(() {
                   if (typing == true) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Search(name: _controller.text)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Search(username: widget.username, password: widget.password, name: _controller.text)));
                   }
                   typing = !typing;
                 });
@@ -227,7 +243,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(
+                          username: widget.username,
+                          password: widget.password,
+                        );
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -307,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(191, 255, 252, 1)),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Post()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Post(account:account, username: widget.username, password: widget.password)));
                     },
                     icon: Icon(Icons.content_paste_outlined),
                   ),

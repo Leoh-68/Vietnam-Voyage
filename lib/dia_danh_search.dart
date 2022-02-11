@@ -7,7 +7,9 @@ import 'package:template/ApiFolder/dia_danh_show.dart';
 
 class Search extends StatefulWidget {
   final String name;
-  const Search({Key? key, required this.name}) : super(key: key);
+  final String username;
+  final String password;
+  const Search({Key? key, required this.name, required this.username, required this.password}) : super(key: key);
 
   @override
   State<Search> createState() => _SearchState();
@@ -23,7 +25,7 @@ class _SearchState extends State<Search> {
     var dvsize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Ahihi"), actions: [
+        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Tìm kiếm "), actions: [
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -62,7 +64,7 @@ class _SearchState extends State<Search> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(username: widget.username, password: widget.password);
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -168,6 +170,8 @@ class _SearchState extends State<Search> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (contex) => Detail(
+                                                username: widget.username,
+                                                password: widget.password,
                                                 mota: snapshot.data![index].moTa.toString(),
                                                 id: snapshot.data![index].id.toString(),
                                                 name: snapshot.data![index].tenDiaDanh.toString(),

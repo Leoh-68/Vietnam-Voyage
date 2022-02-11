@@ -39,11 +39,13 @@ class CreateTableDb extends Migration
             $table->String('TaiKhoanId');
             $table->String('Liked');
             $table->String('Unliked');
+            $table->String('View');
+            $table->integer('idshare');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        
+
         Schema::create('tai_khoan', function (Blueprint $table) {
             $table->id();
             $table->String('UserName');

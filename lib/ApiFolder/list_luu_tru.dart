@@ -1,35 +1,45 @@
-import 'package:template/Api/api.dart';
+import 'package:template/Model/vi_tri.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:template/ApiFolder/dia_danh_share.dart';
+import 'package:template/Api/api.dart';
+import 'package:template/taikhoan.dart';
+import 'package:map_launcher/map_launcher.dart';
 
-class Sharea extends StatefulWidget {
+class LuuTruList extends StatefulWidget {
   final String id;
-  final String idaccount;
   final String username;
   final String password;
-  Sharea({Key? key, required this.id, required this.idaccount, required this.username, required this.password}) : super(key: key);
+  const LuuTruList({Key? key, required this.id, required this.username, required this.password}) : super(key: key);
   @override
-  State<Sharea> createState() => _ShareaState();
+  State<LuuTruList> createState() => _LuuTruListState();
 }
-
-class _ShareaState extends State<Sharea> {
+class _LuuTruListState extends State<LuuTruList> {
   bool typing = false;
-  String text = "";
-  String danhGia = 'Tốt';
-  String result = "";
-  late TextEditingController _controller;
-
+  TaiKhoan user1 = TaiKhoan();
+  ViTri vitri = ViTri();
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    api_lay_tai_khoan(widget.username, widget.password).then((value) {
+      setState(() {
+        user1 = value;
+      });
+    });
+    api_GetLocation(widget.id).then((value) {
+      setState(() {
+        vitri = value;
+      });
+    });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller = TextEditingController();
+  void GGMap(String kinhdo, String vido) async {
+    final availableMaps = await MapLauncher.installedMaps;
+    await availableMaps.first.showMarker(
+      coords: Coords(double.parse(kinhdo), double.parse(vido)),
+      title: "Ocean Beach",
+    );
   }
 
   @override
@@ -37,14 +47,23 @@ class _ShareaState extends State<Sharea> {
     var dvsize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Share"), actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ]),
+        appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(154, 175, 65, 1),
+          title: (typing
+              ? Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(""),
+                )
+              : const Text("Travel App")),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -59,7 +78,7 @@ class _ShareaState extends State<Sharea> {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        "Trần Phước Khánh",
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -97,7 +116,7 @@ class _ShareaState extends State<Sharea> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                          return LoginPage();
+                          return const LoginPage();
                         },
                         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                           return SlideTransition(
@@ -115,57 +134,6 @@ class _ShareaState extends State<Sharea> {
             ],
           ),
         ),
-        body: ListView(
-          children: [
-            Card(
-                color: Colors.white,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller,
-                    maxLines: 8,
-                    decoration: InputDecoration.collapsed(hintText: "Enter your text here"),
-                  ),
-                )),
-            Text(
-              "Đánh giá của bạn",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Center(
-              child: DropdownButton<String>(
-                value: danhGia,
-                elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
-                underline: Container(
-                  height: 2,
-                  width: 150,
-                  color: Colors.deepPurpleAccent,
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    danhGia = newValue!;
-                  });
-                },
-                items: <String>['Tốt', 'Trung bình', 'Kém', 'Không nên'].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
-            FlatButton(
-                onPressed: () {
-                  setState(() {
-                    api_Post(_controller.text, danhGia, widget.id, widget.idaccount).then((value) {
-                      result = value;
-                    });
-                    _controller.clear();
-                  });
-                },
-                child: Text("Submit")),
-            Text("Trạng thái share: $result")
-          ],
-        ));
+        body: ListView(children: []));
   }
 }

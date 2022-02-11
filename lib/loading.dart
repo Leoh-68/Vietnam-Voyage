@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({Key? key}) : super(key: key);
+  final String username;
+  final String password;
+  const LoadingScreen({
+    Key? key,
+    required this.password,
+    required this.username,
+  }) : super(key: key);
   @override
+
+  
   State<LoadingScreen> createState() => _LoadingScreen();
 }
 
@@ -20,7 +28,7 @@ class _LoadingScreen extends State<LoadingScreen> with SingleTickerProviderState
           context,
           PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-              return MyHomePage();
+              return MyHomePage(username: widget.username,password: widget.password,);
             },
             transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
               return SlideTransition(

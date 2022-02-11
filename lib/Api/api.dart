@@ -1,8 +1,12 @@
+import 'package:template/Model/luu_tru.dart';
 import 'package:template/Model/share.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:template/Model/dia_danh.dart';
+import 'package:template/Model/taikhoancoshare.dart';
+import 'package:template/Model/vi_tri.dart';
 import 'package:template/taikhoan.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 String urlBaseAPI = "http://10.0.2.2:8001/api/";
 Future<List<DiaDanh>> api_GetAll_DiaDanh() async {
@@ -82,7 +86,7 @@ Future<List<Share>> api_GetShare(int IdTaiKhoan) async {
 Future<String> api_Post(String BaiViet, String DanhGia, String DiaDanhId, String TaiKhoanId) async {
   String result = "Thành công";
   try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=1&DanhGia=$DanhGia"));
+    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId&DanhGia=$DanhGia"));
     result = response.body;
   } catch (e) {}
   return result;
@@ -103,37 +107,33 @@ Future<List<Share>> api_GetShareHome() async {
   return data;
 }
 
-Future<String> api_Like(String id) async {
+Future<String> api_Like(String id, String idaccount) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "likePost?id=$id&idaccount=$idaccount"));
+  result = response.body;
+  return result;
+}
+
+Future<String> api_reLike(String id, String idaccount) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "relikePost?id=$id&idaccount=$idaccount"));
+  result = response.body;
+  return result;
+}
+
+Future<String> api_UnLike(String id, String idaccount) async {
   String result = "";
   try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "likePost?id=$id"));
+    final response = await http.get(Uri.parse(urlBaseAPI + "unlikePost?id=$id&idaccount=$idaccount"));
     result = response.body;
   } catch (e) {}
   return result;
 }
 
-Future<String> api_reLike(String id) async {
+Future<String> api_reUnLike(String id, String idaccount) async {
   String result = "";
   try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "relikePost?id=$id"));
-    result = response.body;
-  } catch (e) {}
-  return result;
-}
-
-Future<String> api_UnLike(String id) async {
-  String result = "";
-  try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "unlikePost?id=$id"));
-    result = response.body;
-  } catch (e) {}
-  return result;
-}
-
-Future<String> api_reUnLike(String id) async {
-  String result = "";
-  try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "reunlikePost?id=$id"));
+    final response = await http.get(Uri.parse(urlBaseAPI + "reunlikePost?id=$id&idaccount=$idaccount"));
     result = response.body;
   } catch (e) {}
   return result;
@@ -145,4 +145,89 @@ Future<List<TaiKhoan>> api_lay_ds_tai_khoan() async {
   List tk = json.decode(response.body);
   TK = tk.map((e) => TaiKhoan.fromJson(e)).toList();
   return TK;
+}
+
+Future<TaiKhoan> api_lay_tai_khoan(String username, String pass) async {
+  TaiKhoan TK = new TaiKhoan();
+  final response = await http.post(Uri.parse(urlBaseAPI + "accountinfo"), body: {'username': "$username", 'password': "$pass"});
+  final tk = json.decode(response.body);
+  TK = TaiKhoan.fromJson(tk);
+  return TK;
+}
+
+Future<String> api_check_tai_khoan(String username, String pass) async {
+  String TK = "";
+  final response = await http.post(Uri.parse(urlBaseAPI + "checkTrung"), body: {'username': "$username", 'password': "$pass"});
+  TK = response.body;
+
+  return TK;
+}
+
+Future<TaiKhoancoShare> api_share_tai_khoan(String id) async {
+  TaiKhoancoShare result = TaiKhoancoShare();
+  final response = await http.post(Uri.parse(urlBaseAPI + "TaiKhoan"), body: {'id': "$id"});
+  final tk = json.decode(response.body);
+  result = TaiKhoancoShare.fromJson(tk);
+  return result;
+}
+
+Future<ViTri> api_GetLocation(String id) async {
+  ViTri data = new ViTri();
+  final response = await http.get(Uri.parse(urlBaseAPI + "ViTri?id=$id"));
+  final jsonRaw = json.decode(response.body);
+  data = ViTri.fromJson(jsonRaw);
+  return data;
+}
+
+Future<String> api_Register(
+  String username,
+  String password,
+  String hoten,
+  String email,
+  String sdt,
+) async {
+  String data = "";
+  final response = await http.post(Uri.parse(urlBaseAPI + "dangky"),
+      body: {'username': "$username", 'password': "$password", 'hoten': "$hoten", 'email': "$email", 'sdt': "$sdt"});
+  final jsonRaw = json.decode(response.body);
+  data = jsonRaw.toString();
+  return data;
+}
+
+//đếm số like
+Future<String> api_countlike(String id) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "countlike?id=$id"));
+  result = response.body;
+  return result;
+}
+
+Future<String> api_countunlike(String id) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "countunlike?id=$id"));
+  result = response.body;
+  return result;
+}
+
+//Check like
+Future<String> api_liked(String idaccount, String idshare) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "liked?idaccount=$idaccount&idshare=$idshare"));
+  result = response.body;
+  return result;
+}
+
+Future<String> api_unliked(String idaccount, String idshare) async {
+  String result = "";
+  final response = await http.get(Uri.parse(urlBaseAPI + "unliked?idaccount=$idaccount&idshare=$idshare"));
+  result = response.body;
+  return result;
+}
+
+Future<List<LuuTru>> api_get_luutru(String id) async {
+  List<LuuTru> result = [];
+  final response = await http.get(Uri.parse(urlBaseAPI + "luutru?id=$id"));
+  List tk = json.decode(response.body);
+  result = tk.map((e) => LuuTru.fromJson(e)).toList();
+  return result;
 }

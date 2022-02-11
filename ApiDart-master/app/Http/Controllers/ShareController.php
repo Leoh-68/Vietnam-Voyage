@@ -53,6 +53,7 @@ class ShareController extends Controller
     $share->TaiKhoanId=$req->TaiKhoanID;
     $share->Liked=0;
     $share->Unliked=0;
+    $share->idshare=0;
     $share->save();
     return 0;
   }
@@ -62,35 +63,91 @@ class ShareController extends Controller
       $share=Share::all();
       return $share;
   }
+
   public function likePost(Request $req)
   {
     $share=Share::find($req->id);
-    $share->Liked+=1;
-    $share->save();
-    return $share->Liked;
+    $new=new Share();
+    $new->DiaDanhId=$share->DiaDanhId;
+    $new->BaiViet=$share->BaiViet;
+    $new->DanhGia=$share->DanhGia;
+    $new->TaiKhoanId=$req->idaccount;
+    $new->Liked=1;
+    $new->Unliked=0;
+    $new->idshare=$share->id;
+    $new->save();
+    $like=Share::where([['idshare',$share->id],['Liked','1']])->count();
+    return $like;
   }
 
   public function relikePost(Request $req)
   {
     $share=Share::find($req->id);
-    $share->Liked-=1;
-    $share->save();
-    return $share->Liked;
+    $new=Share::where([['idshare',$share->id],['TaiKhoanId',$req->idaccount]]);
+    $new->delete();
+    $like=Share::where([['idshare',$share->id],['Liked','1']])->count();
+    return $like;
   }
 
   public function unlikePost(Request $req)
   {
     $share=Share::find($req->id);
-    $share->Unliked+=1;
-    $share->save();
-    return $share->Unliked;
+    $new=new Share();
+    $new->DiaDanhId=$share->DiaDanhId;
+    $new->BaiViet=$share->BaiViet;
+    $new->DanhGia=$share->DanhGia;
+    $new->TaiKhoanId=$req->idaccount;
+    $new->Liked=0;
+    $new->Unliked=1;
+    $new->idshare=$share->id;
+    $new->save();
+    $like=Share::where([['idshare',$share->id],['Unliked','1']])->count();
+    return $like;
   }
 
   public function reunlikePost(Request $req)
   {
     $share=Share::find($req->id);
-    $share->Unliked-=1;
-    $share->save();
-    return $share->Unliked;
+    $new=Share::where([['idshare',$share->id],['TaiKhoanId',$req->idaccount]]);
+    $new->delete();
+    $like=Share::where([['idshare',$share->id],['Unliked','1']])->count();
+    return $like;
+  }
+  //Lấy số like, unlike bài viết
+  public function countlike(Request $req)
+  {
+    $like=Share::where([['idshare',$req->id],['Liked','1']])->count();
+    return $like;
+  }
+  public function countunlike(Request $req)
+  {
+    $like=Share::where([['idshare',$req->id],['Unliked','1']])->count();
+    return $like;
+  }
+  //kiem tra da unlike, like
+  public function liked(Request $req)
+  {
+
+      $post=Share::where([['TaiKhoanId',$req->idaccount],['idshare',$req->idshare],['Liked','1']])->count();
+      if($post==0)
+      {
+       return 0;
+      }
+      else
+      {
+          return 1;
+      }
+  }
+  public function unliked(Request $req)
+  {
+      $post=Share::where([['TaiKhoanId',$req->idaccount],['idshare',$req->idshare],['Unliked','1']])->count();
+      if($post==0)
+      {
+       return 0;
+      }
+      else
+      {
+          return 1;
+      }
   }
 }
