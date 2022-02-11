@@ -1,12 +1,9 @@
-import 'package:template/homepage.dart';
+import 'package:template/home_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:template/taikhoan.dart';
-
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({Key? key, required this.tK}) : super(key: key);
-  final TaiKhoan tK;
+  const LoadingScreen({Key? key}) : super(key: key);
   @override
   State<LoadingScreen> createState() => _LoadingScreen();
 }
@@ -27,9 +24,7 @@ class _LoadingScreen extends State<LoadingScreen>
           PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation animation,
                 Animation secondaryAnimation) {
-              return MyHomePage(
-                tK: widget.tK,
-              );
+              return MyHomePage();
             },
             transitionsBuilder: (BuildContext context,
                 Animation<double> animation,
@@ -57,6 +52,7 @@ class _LoadingScreen extends State<LoadingScreen>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Loading........",
       home: Scaffold(
         backgroundColor: const Color.fromRGBO(154, 175, 65, 1),
