@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use  App\Http\Controllers\TaiKhoanController;
+use  App\Http\Controllers\DiaDanhController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +20,6 @@ Route::get('/', function () {
 
 
 Route::post('/',[DiaDanhController::class,'ThemDiaDanh'])->name("add");
+
+
+Route::get('/image',[TaiKhoanController::class,'image'])->name("image");

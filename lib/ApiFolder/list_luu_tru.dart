@@ -1,3 +1,4 @@
+import 'package:template/Model/luu_tru.dart';
 import 'package:template/Model/vi_tri.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
@@ -11,14 +12,18 @@ class LuuTruList extends StatefulWidget {
   final String id;
   final String username;
   final String password;
+
   const LuuTruList({Key? key, required this.id, required this.username, required this.password}) : super(key: key);
   @override
   State<LuuTruList> createState() => _LuuTruListState();
 }
+
 class _LuuTruListState extends State<LuuTruList> {
   bool typing = false;
   TaiKhoan user1 = TaiKhoan();
   ViTri vitri = ViTri();
+  int lengh = 0;
+  List<LuuTru> result = [];
   @override
   void initState() {
     super.initState();
@@ -27,9 +32,10 @@ class _LuuTruListState extends State<LuuTruList> {
         user1 = value;
       });
     });
-    api_GetLocation(widget.id).then((value) {
+    api_get_luutru(widget.id).then((value) {
       setState(() {
-        vitri = value;
+        result = value;
+        lengh = result.length;
       });
     });
   }
@@ -134,6 +140,51 @@ class _LuuTruListState extends State<LuuTruList> {
             ],
           ),
         ),
-        body: ListView(children: []));
+        body: ListView(
+          children: [
+            Column(
+              children: [
+                Text(
+                  "Danh sách nơi lưu trú",
+                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                lengh == 0
+                    ? Text(
+                        "Data rỗng",
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: result.length,
+                        itemBuilder: (contex, index) {
+                          return Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(bottom: 10, left: 10),
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        result[index].tenLuuTru!.toString(),
+                                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(result[index].tenLuuTru!.toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        }),
+              ],
+            )
+          ],
+        ));
   }
 }

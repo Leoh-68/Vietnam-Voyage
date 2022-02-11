@@ -23,6 +23,7 @@ class AddShare extends Migration
             $dd->TaiKhoanId=$a+$i+1;
             $dd->Liked=1;
             $dd->Unliked=0;
+            $dd->View=0;
             $dd->save();
         }
     }

@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String text = "";
   String location = "3";
   late TextEditingController _controller;
- TaiKhoan account = new TaiKhoan();
+  TaiKhoan account = new TaiKhoan();
   @override
   void initState() {
     super.initState();
@@ -326,7 +326,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(191, 255, 252, 1)),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Post(account:account, username: widget.username, password: widget.password)));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Post(account: account, username: widget.username, password: widget.password)));
                     },
                     icon: Icon(Icons.content_paste_outlined),
                   ),

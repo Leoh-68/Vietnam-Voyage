@@ -48,35 +48,6 @@ class DiaDanhController extends Controller
         $vitri = ToaDo::where('DiaDanhId', $req->id)->first();
         return response()->json($vitri);
     }
-    public function layDiaDanhHot()
-    {
-        $dem = -1;
-        $sl = 0;
-        $aa[] = [];
-        $dd = new DiaDanh();
-        $diadanh = DiaDanh::all();
-        for ($i = 0; $i < 5; $i++) {
-            foreach ($diadanh as $var) {
-                $share = Share::where('DiaDanhId', $var->id)->count();
-                if($sl==$share){continue;};
-                if ($dem == -1) {
-                    $sl = $share;
-                    $dem = 2;
-                } else if ($share > $sl) {
-                    $sl = $share;
-                    foreach ($dd as $var) {
-                        $share = Share::where('DiaDanhId', $var->id)->count();
-                        if ($sl == $share) {
-                            $share = Share::where('DiaDanhId', $var->id)->first();
-                            $diadanh = DiaDanh::find($share->DiaDanhId);
-                            $dd->push($diadanh);
-                        }
-                    }
-                }
-            }
-        }
-        return $aa;
-    }
     public function luutru(Request $req)
     {
         $data=LuuTru::where('DiaDanhId',$req->id)->get();

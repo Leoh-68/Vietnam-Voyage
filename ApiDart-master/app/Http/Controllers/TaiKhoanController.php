@@ -36,7 +36,6 @@ class TaiKhoanController extends Controller
         $tk->HoTen=$req->hoten;
         $tk->Email=$req->email;
         $tk->SDT=$req->sdt;
-        $tk->Status=1;
         $tk->save();
         return 1;
     }
@@ -45,5 +44,10 @@ class TaiKhoanController extends Controller
    {
     $tk=TaiKhoan::where([['UserName',$req->username],['Password',$req->password]])->count();
     return $tk;
+   }
+   public function image(Request $req)
+   {
+       $image=$req->image;
+       return View('image',compact('image'));
    }
 }

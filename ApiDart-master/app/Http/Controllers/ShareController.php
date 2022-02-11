@@ -32,6 +32,15 @@ class ShareController extends Controller
             $sl =$share;
         }
     }
+    if($sl==0)
+    {
+        $a=DiaDanh::all()->where('deleted_at',null);
+        foreach ($a as $var)
+        {
+            $diadanh=DiaDanh::find($var->id);
+        }
+        return response()->json($diadanh, 200);
+    }
     foreach($dd as $var)
     {
         $share=Share::where('DiaDanhId',$var->id)->count();
@@ -54,6 +63,7 @@ class ShareController extends Controller
     $share->Liked=0;
     $share->Unliked=0;
     $share->idshare=0;
+    $share->View=0;
     $share->save();
     return 0;
   }
@@ -75,7 +85,9 @@ class ShareController extends Controller
     $new->Liked=1;
     $new->Unliked=0;
     $new->idshare=$share->id;
+    $new->View=0;
     $new->save();
+    $share->View+=1;
     $like=Share::where([['idshare',$share->id],['Liked','1']])->count();
     return $like;
   }
@@ -100,6 +112,7 @@ class ShareController extends Controller
     $new->Liked=0;
     $new->Unliked=1;
     $new->idshare=$share->id;
+    $new->View=0;
     $new->save();
     $like=Share::where([['idshare',$share->id],['Unliked','1']])->count();
     return $like;
