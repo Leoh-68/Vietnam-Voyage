@@ -56,7 +56,7 @@ class CreateTable extends Migration
             $table->foreign('diadanhid')->references('id')->on('diadanh');
             $table->integer('taikhoanid');
             $table->foreign('taikhoanid')->references('id')->on('taikhoan');
-            $table->integer('luotxem');
+            $table->integer('luotxem')->default('0');
             $table->boolean('like');
             $table->timestamps();
             $table->SoftDeletes();
