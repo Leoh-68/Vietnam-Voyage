@@ -57,6 +57,7 @@ class CreateTable extends Migration
             $table->integer('taikhoanid');
             $table->foreign('taikhoanid')->references('id')->on('taikhoan');
             $table->integer('luotxem');
+            $table->boolean('like');
             $table->timestamps();
             $table->SoftDeletes();
         });
