@@ -1,10 +1,13 @@
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
+import 'package:template/taikhoan.dart';
 
 import 'main.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.tK}) : super(key: key);
+  final TaiKhoan tK;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -14,12 +17,14 @@ class _MyHomePageState extends State<MyHomePage> {
   int countter = 2;
   bool typing = false;
   String text = "";
+  late TaiKhoan tk;
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    tk = widget.tK;
   }
 
   @override
@@ -81,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        "   " + tk.hoten.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -97,7 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation,
                           Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(
+                          tk: tk,
+                        );
                       },
                       transitionsBuilder: (BuildContext context,
                           Animation<double> animation,

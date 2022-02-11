@@ -15,6 +15,7 @@ class LoginPageState extends State<LoginPage> {
   late TextEditingController _pass;
   bool isLoading = false;
   List<TaiKhoan> TK = [];
+  late TaiKhoan tk;
   @override
   void initState() {
     super.initState();
@@ -30,9 +31,10 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.userName!.contains(username) &&
+      if (taiK.username!.contains(username) &&
           taiK.password!.contains(password)) {
         check = true;
+        tk = taiK;
       }
     }
     return check;
@@ -126,7 +128,32 @@ class LoginPageState extends State<LoginPage> {
                                             (BuildContext context,
                                                 Animation animation,
                                                 Animation secondaryAnimation) {
-                                          return const LoadingScreen();
+                                          return LoadingScreen(
+                                            tK: tk,
+                                          );
+                                        }, transitionsBuilder:
+                                            (BuildContext context,
+                                                Animation<double> animation,
+                                                Animation<double>
+                                                    secondaryAnimation,
+                                                Widget child) {
+                                          return SlideTransition(
+                                            position: Tween<Offset>(
+                                              begin: const Offset(1.0, 0.0),
+                                              end: Offset.zero,
+                                            ).animate(animation),
+                                            child: child,
+                                          );
+                                        }),
+                                        (Route route) => false);
+                                  } else {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        PageRouteBuilder(pageBuilder:
+                                            (BuildContext context,
+                                                Animation animation,
+                                                Animation secondaryAnimation) {
+                                          return const ErrorPage();
                                         }, transitionsBuilder:
                                             (BuildContext context,
                                                 Animation<double> animation,

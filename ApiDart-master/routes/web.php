@@ -1,6 +1,6 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DangNhapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
+Route::get('/login', [DangNhapController::class,'xulyTaiKhoan'])->name('login');
+Route::post('/login', [DangNhapController::class,'xuLyDangNhap'])->name('xl-dang-nhap');
+Route::get('/Admin/Students', [StudentController::class, 'layDanhSachSV'])->name('StudentsList');

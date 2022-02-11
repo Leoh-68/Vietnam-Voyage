@@ -1,35 +1,32 @@
 class TaiKhoan {
   int? id;
-  String? userName;
+  String? username;
   String? password;
-  String? hoTen;
+  String? hoten;
+  String? sdt;
   String? email;
-  String? sDT;
-  int? status;
   String? createdAt;
-  Null? updatedAt;
+  String? updatedAt;
   Null? deletedAt;
 
   TaiKhoan(
       {this.id,
-      this.userName,
+      this.username,
       this.password,
-      this.hoTen,
+      this.hoten,
+      this.sdt,
       this.email,
-      this.sDT,
-      this.status,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
 
   TaiKhoan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userName = json['UserName'];
-    password = json['Password'];
-    hoTen = json['HoTen'];
-    email = json['Email'];
-    sDT = json['SDT'];
-    status = json['Status'];
+    username = json['username'];
+    password = json['password'];
+    hoten = json['hoten'];
+    sdt = json['sdt'];
+    email = json['email'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
@@ -38,12 +35,11 @@ class TaiKhoan {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['UserName'] = this.userName;
-    data['Password'] = this.password;
-    data['HoTen'] = this.hoTen;
-    data['Email'] = this.email;
-    data['SDT'] = this.sDT;
-    data['Status'] = this.status;
+    data['username'] = this.username;
+    data['password'] = this.password;
+    data['hoten'] = this.hoten;
+    data['sdt'] = this.sdt;
+    data['email'] = this.email;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
