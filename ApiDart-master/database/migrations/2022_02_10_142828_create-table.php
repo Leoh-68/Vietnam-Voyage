@@ -35,6 +35,9 @@ class CreateTable extends Migration
             $table->string('tendiadanh');
             $table->integer('vitriid');
             $table->foreign('vitriid')->references('id')->on('vitri');
+            $table->integer()->default('0');
+            $table->string('vungmien');
+            $table->string('noidung');
             $table->timestamps();
             $table->SoftDeletes();
         });
@@ -53,6 +56,7 @@ class CreateTable extends Migration
             $table->foreign('diadanhid')->references('id')->on('diadanh');
             $table->integer('taikhoanid');
             $table->foreign('taikhoanid')->references('id')->on('taikhoan');
+            $table->integer('luotxem');
             $table->timestamps();
             $table->SoftDeletes();
         });

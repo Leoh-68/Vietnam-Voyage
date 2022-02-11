@@ -30,7 +30,8 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.userName!.contains(username) && taiK.password!.contains(password)) {
+      if (taiK.username!.contains(username) &&
+          taiK.password!.contains(password)) {
         check = true;
       }
     }
@@ -115,8 +116,35 @@ class LoginPageState extends State<LoginPage> {
                                     });
                                     Navigator.pushAndRemoveUntil(
                                         context,
-                                        PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                                          return const LoadingScreen();
+                                        PageRouteBuilder(pageBuilder:
+                                            (BuildContext context,
+                                                Animation animation,
+                                                Animation secondaryAnimation) {
+                                          return const LoadingScreen(
+                                          );
+                                        }, transitionsBuilder:
+                                            (BuildContext context,
+                                                Animation<double> animation,
+                                                Animation<double>
+                                                    secondaryAnimation,
+                                                Widget child) {
+                                          return SlideTransition(
+                                            position: Tween<Offset>(
+                                              begin: const Offset(1.0, 0.0),
+                                              end: Offset.zero,
+                                            ).animate(animation),
+                                            child: child,
+                                          );
+                                        }),
+                                        (Route route) => false);
+                                  } else {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        PageRouteBuilder(pageBuilder:
+                                            (BuildContext context,
+                                                Animation animation,
+                                                Animation secondaryAnimation) {
+                                          return const ErrorPage();
                                         }, transitionsBuilder:
                                             (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                                           return SlideTransition(
