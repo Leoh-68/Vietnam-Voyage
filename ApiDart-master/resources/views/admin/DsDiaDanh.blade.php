@@ -1,3 +1,6 @@
+@php 
+use \App\Http\Controllers\AdminController;
+@endphp
 @extends('layouts.AdminPage')
  @section('library')
  <meta charset="utf-8">
@@ -22,30 +25,23 @@
  @section('func')
  <div class="">
     <div class="container">
-        <a class="btn btn-primary" href="{{route('loadThemSV')}}"><i class="fa fa-plus"></i> Thêm</a>
-    <table class="table">
+        <a class="btn btn-primary" href="{{route('ThemDiaDanh')}}"><i class="fa fa-plus"></i> Thêm</a>
+    <table class="table" style="margin-top:10px;">
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Họ tên</th>
-                <th>Ngày sinh</th>
-                <th>Địa chỉ</th>
-                <th>Số điện thoại</th>
-                <th>Email</th>
+                <th style="width: 450px;">Tên địa danh</th>
+                <th style="width: 262px;">Vị trí</th>
                 <th>Chức năng</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($dsSV as $SinhVien)
+            @foreach($diadanh as $dd)
             <tr>
-                <td>{{ $SinhVien->username }}</td>
-                <td>{{ $SinhVien->hoten }}</td>
-                <td>{{ $SinhVien->ngaysinh }}</td>
-                <td>{{ $SinhVien->diachi }}</td>
-                <td>{{ $SinhVien->sdt }}</td>
-                <td>{{ $SinhVien->email }}</td>
-                <td><a class="btn btn-primary" href="{{route('loadSuaSV',['id' => $SinhVien->id])}}"><i class="fa fa-edit"></i> Sửa</a>
-                <a class="btn btn-danger" onclick="return confirm('Bạn có chắc không?')" href="{{route('xoaSV',['id' => $SinhVien->id])}}"><i class="fa fa-trash"></i> Xóa</a></td>
+                <td>{{ $dd->tendiadanh }}</td>
+                <td>{{ AdminController::LayViTri($dd->vitriid) }}</td>
+                <td><a class="btn btn-primary" href="{{route('SuaDiaDanh',['id' => $dd->id])}}"><i class="fa fa-edit"></i> Sửa</a>
+                <a class="btn btn-danger" onclick="return confirm('Bạn có chắc không?')" href="{{route('XoaDiaDanh',['id' => $dd->id])}}"><i class="fa fa-trash"></i> Xóa</a>
+                <a class="btn btn-success" href="{{route('DSHinhAnh',['id' => $dd->id])}}"><i class="fa fa-image"></i> Hình ảnh</a></td>
             </tr>
             @endforeach
         </tbody>
