@@ -176,7 +176,7 @@ class _SearchState extends State<Search> {
                                                 id: snapshot.data![index].id.toString(),
                                                 name: snapshot.data![index].tenDiaDanh.toString(),
                                                 location: snapshot.data![index].viTri!,
-                                                image: location)));
+                                                image: snapshot.data![index].hinhAnh!)));
                                   },
                                 )
                               ],
