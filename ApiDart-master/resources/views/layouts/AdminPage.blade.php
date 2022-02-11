@@ -1,4 +1,6 @@
-
+@php 
+use \App\Http\Controllers\TaiKhoanController;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 @yield('html')
@@ -24,29 +26,14 @@
 <body class="bodyadmin">
     <header>
           <span></span>
-        <a href="#" class="logo">E-Learning Project</a>
-        <ul>
-        {{Auth::user()->hoten;}}
-            @php
-                $account=Auth::user()->hinhanh;
-            @endphp
-            <li>
-                <a href="{{route('loadAccount')}}"><img src="{{ asset('images/'.$account) }}" alt="Avatar" class="avatarnavbar"></a>
-            </li>
-            <a href="{{route('dangXuat')}}"><img src="{{ asset('images/logout.png') }}" alt="Avatar" class="avatarnavbar"></a>    
+        <a class="logo">Trang quản trị</a>
+        <ul style="align-items: center;">
+            <a href="{{route('DangXuat')}}"><img src="{{ asset('images/logout.png') }}" alt="Avatar" class="avatarnavbar"></a>    
              <li> 
 
             </li>
         </ul>
     </header>
-    <div class="classbody">
-        <div class="container">
-            <a id="btn" class="btn btn-primary" href="{{route('TeachersList')}}">Quản lý Giảng viên</a>
-            <a id="btn" class="btn btn-primary" href="{{route('StudentsList')}}">Quản lý Sinh viên</a>
-            <a id="btn" class="btn btn-primary" href="{{route('ClassroomsList')}}">Quản lý lớp học</a>
-            <a id="btn" class="btn btn-danger" style="float:right" href="{{route('AdminsList')}}">Quản lý tài khoản quản trị viên</a>
-        </div>
-    </div>
      @yield('func')
 </body>
 

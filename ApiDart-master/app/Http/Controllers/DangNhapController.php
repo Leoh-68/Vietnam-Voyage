@@ -13,7 +13,7 @@ class DangNhapController extends Controller
     {
         if(session()->has('username')&&session()->has('password')){
             if(session('username') == "admin") {
-                return redirect()->route('/');
+                return redirect()->route('DiaDanh');
             }
         }
         else{
@@ -38,7 +38,7 @@ class DangNhapController extends Controller
                 session(['username' => $request->username]);
                 session(['password' => $request->username]);
                 if($tk->username=="admin") {
-                    return redirect()->route('/');
+                    return redirect()->route('DiaDanh');
                 }
             }
         }

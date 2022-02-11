@@ -9,7 +9,7 @@ class TaiKhoanController extends Controller
 {
     public function dangnhap(Request $rq)
     {
-        $user = TaiKhoan::where('UserName',$rq->username)->first();
+        $user = TaiKhoan::where('username',$rq->username)->first();
         if($user!=null){
             return 1;
         }
@@ -18,5 +18,10 @@ class TaiKhoanController extends Controller
     {
         $dstk = Taikhoan::all();
         return $dstk;
+    }
+    public static function gettaikhoan($username)
+    {
+        $tk = TaiKhoan::where('username',$username)->first();
+        return $tk;
     }
 }
