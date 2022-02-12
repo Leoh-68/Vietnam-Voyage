@@ -73,6 +73,7 @@ class AdminController extends Controller
         $dd = new DiaDanh;
         $dd->tendiadanh = $rq->tendiadanh;
         $dd->vitriid = $vt->id;
+        $dd->noidung = $rq->noidung;
         $dd->save();
         $ddid = DiaDanh::where([['tendiadanh',$dd->tendiadanh],['vitriid',$dd->vitriid],['deleted_at',null]])->first();
         $ha = new HinhAnhDiaDanh;
@@ -84,7 +85,12 @@ class AdminController extends Controller
         $dd = new DiaDanh;
         $dd->tendiadanh = $rq->tendiadanh;
         $dd->vitriid = $vtid->id;
+        $dd->noidung = $rq->noidung;
         $dd->save();
+        $ddid = DiaDanh::where([['tendiadanh',$dd->tendiadanh],['vitriid',$dd->vitriid],['deleted_at',null]])->first();
+        $ha->diadanhid = $ddid->id;
+        $ha->duongdan = "defaultimg.jpg";
+        $ha->save();
         return redirect()->route('DiaDanh');
     }
     public function SuaDiaDanh($id)
@@ -114,6 +120,7 @@ class AdminController extends Controller
         $vt->save();
         $dd->tendiadanh = $rq->tendiadanh;
         $dd->vitriid = $vt->id;
+        $dd->noidung = $rq->noidung;
         $dd->updated_at = date("Y-m-d");
         $dd->save();
         return redirect()->route('DiaDanh');
@@ -121,6 +128,8 @@ class AdminController extends Controller
         $dd = DiaDanh::find($id);
         $dd->tendiadanh = $rq->tendiadanh;
         $dd->vitriid = $vtid->id;
+        $dd->noidung = $rq->noidung;
+        dd($rq->noidung);
         $dd->updated_at = date("Y-m-d");
         $dd->save();
         return redirect()->route('DiaDanh');
