@@ -13,19 +13,6 @@ class AddShare extends Migration
      */
     public function up()
     {
-        $a=0;
-        for($i=0;$i<7;$i++)
-        {
-            $dd=new Share;
-            $dd->BaiViet="Nơi này rất đẹp";
-            $dd->DanhGia="5s";
-            $dd->DiaDanhId=$a+$i+1;
-            $dd->TaiKhoanId=$a+$i+1;
-            $dd->Liked=1;
-            $dd->Unliked=0;
-            $dd->View=0;
-            $dd->save();
-        }
     }
 
     /**

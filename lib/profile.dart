@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:template/Api/api.dart';
+import 'package:template/Model/luot_share.dart';
 // import 'package:template/Model/taikhoan.dart';
 import 'package:template/taikhoan.dart';
 import 'package:template/Model/taikhoancoshare.dart';
@@ -34,6 +35,8 @@ class _ProfileState extends State<Profile> {
   Color unlikecolor = Colors.black;
   TaiKhoan user1 = TaiKhoan();
   TaiKhoancoShare userpost = TaiKhoancoShare();
+  LuotShare ls = new LuotShare();
+  String aaa = "";
   @override
   void initState() {
     super.initState();
@@ -56,218 +59,91 @@ class _ProfileState extends State<Profile> {
             child: ListView.builder(
                 itemCount: userpost.share!.length,
                 itemBuilder: (contex, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Column(
-                      children: [
-                        ListTile(
-                            title: Text(userpost.hoTen!.toString(), style: TextStyle(fontSize: 20)),
-                            subtitle: Text(
-                              userpost.share![0].created.toString(),
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            leading: const SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('images/3.jpg'),
+                  return userpost.share![index].idshare == "0"
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                  title: Text(userpost.hoTen!.toString(), style: TextStyle(fontSize: 20)),
+                                  subtitle: Text(
+                                    userpost.share![0].created.toString(),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  leading: const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: CircleAvatar(
+                                      backgroundImage: AssetImage('images/3.jpg'),
+                                    ),
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    userpost.share![index].baiViet.toString(),
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
                               ),
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              userpost.share![index].baiViet.toString(),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SizedBox(
-                            child: Image(image: AssetImage('images/1.jpg')),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      if (unliked == false) {
-                                        if (liked == false) {
-                                          setState(() {
-                                            // api_Like(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                            liked = true;
-                                            likecolor = Colors.red;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            // api_reLike(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                            liked = false;
-                                            likecolor = Colors.black;
-                                          });
-                                        }
-                                      } else {
-                                        null;
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.favorite,
-                                      color: likecolor,
-                                    )),
-                                Text(userpost.share![index].liked.toString())
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      if (liked == false) {
-                                        if (unliked == false) {
-                                          setState(() {
-                                            // api_UnLike(snapshot.data![index].id.toString()).then((value) => {unlike = value});
-                                            unliked = true;
-                                            unlikecolor = Colors.red;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            // api_reUnLike(snapshot.data![index].id.toString()).then((value) => {
-                                            //       unlike = value,
-                                            //     });
-                                            unliked = false;
-                                            unlikecolor = Colors.black;
-                                          });
-                                        }
-                                      } else {
-                                        null;
-                                      }
-                                    },
-                                    icon: Icon(Icons.thumb_down_alt, color: unlikecolor)),
-                                Text(userpost.share![0].unliked.toString())
-                              ],
-                            ),
-                            Container(
-                              child: Row(
-                                children: const [Icon(Icons.remove_red_eye), Text("100")],
+                              const Padding(
+                                padding: EdgeInsets.all(10),
+                                child: SizedBox(
+                                  child: Image(image: AssetImage('images/1.jpg')),
+                                ),
                               ),
-                              alignment: Alignment.topRight,
-                            )
-                          ],
+                              FutureBuilder<String>(
+                                  future: api_countlike(userpost.share![index].diaDanhId.toString(), userpost.share![index].id.toString()),
+                                  builder: (contex, snapshot3) {
+                                    snapshot3.data == null ? Text("Loading........") : aaa = snapshot3.data!;
+
+                                    return Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  late String unlike;
+                                                  late String like;
+                                                  api_liked(userpost.id.toString(), userpost.share![index].id.toString()).then((value) {
+                                                    setState(() {
+                                                      like = value;
+                                                      if (like == "1") {
+                                                        api_reLike(userpost.share![index].id.toString(), userpost.id.toString()).then((value) {
+                                                          ls = value;
+                                                        });
+                                                      } else {
+                                                        api_Like(userpost.share![index].id.toString(), userpost.id.toString()).then((value) {
+                                                          ls = value;
+                                                        });
+                                                      }
+                                                    });
+                                                  });
+                                                },
+                                                icon: Icon(
+                                                  Icons.favorite,
+                                                  color: likecolor,
+                                                )),
+                                            aaa != null ? Text(aaa) : CircularProgressIndicator()
+                                          ],
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [const Icon(Icons.remove_red_eye), Text("25")],
+                                          ),
+                                          alignment: Alignment.topRight,
+                                        )
+                                      ],
+                                    );
+                                  })
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  );
+                      : Container();
                 }),
           )
         : CircularProgressIndicator();
-  }
-
-  Widget post() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Column(
-        children: [
-          ListTile(
-              title: Text(userpost.hoTen!.toString(), style: TextStyle(fontSize: 20)),
-              subtitle: Text(
-                userpost.share![0].created.toString(),
-                style: TextStyle(fontSize: 16),
-              ),
-              leading: const SizedBox(
-                height: 50,
-                width: 50,
-                child: CircleAvatar(
-                  backgroundImage: AssetImage('images/3.jpg'),
-                ),
-              )),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                userpost.share![0].baiViet.toString(),
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: SizedBox(
-              child: Image(image: AssetImage('images/1.jpg')),
-            ),
-          ),
-          Row(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        if (unliked == false) {
-                          if (liked == false) {
-                            setState(() {
-                              // api_Like(snapshot.data![index].id.toString()).then((value) => {like = value});
-                              liked = true;
-                              likecolor = Colors.red;
-                            });
-                          } else {
-                            setState(() {
-                              // api_reLike(snapshot.data![index].id.toString()).then((value) => {like = value});
-                              liked = false;
-                              likecolor = Colors.black;
-                            });
-                          }
-                        } else {
-                          null;
-                        }
-                      },
-                      icon: Icon(
-                        Icons.favorite,
-                        color: likecolor,
-                      )),
-                  Text("số like")
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        if (liked == false) {
-                          if (unliked == false) {
-                            setState(() {
-                              // api_UnLike(snapshot.data![index].id.toString()).then((value) => {unlike = value});
-                              unliked = true;
-                              unlikecolor = Colors.red;
-                            });
-                          } else {
-                            setState(() {
-                              // api_reUnLike(snapshot.data![index].id.toString()).then((value) => {
-                              //       unlike = value,
-                              //     });
-                              unliked = false;
-                              unlikecolor = Colors.black;
-                            });
-                          }
-                        } else {
-                          null;
-                        }
-                      },
-                      icon: Icon(Icons.thumb_down_alt, color: unlikecolor)),
-                  Text("Số unliked")
-                ],
-              ),
-              Container(
-                child: Row(
-                  children: const [Icon(Icons.remove_red_eye), Text("100")],
-                ),
-                alignment: Alignment.topRight,
-              )
-            ],
-          )
-        ],
-      ),
-    );
   }
 
   @override

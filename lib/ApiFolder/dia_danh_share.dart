@@ -131,40 +131,17 @@ class _ShareaState extends State<Sharea> {
               "Đánh giá của bạn",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Center(
-              child: DropdownButton<String>(
-                value: danhGia,
-                elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
-                underline: Container(
-                  height: 2,
-                  width: 150,
-                  color: Colors.deepPurpleAccent,
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    danhGia = newValue!;
-                  });
-                },
-                items: <String>['Tốt', 'Trung bình', 'Kém', 'Không nên'].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
+
             FlatButton(
                 onPressed: () {
                   setState(() {
-                    api_Post(_controller.text, danhGia, widget.id, widget.idaccount).then((value) {
+                    api_Post(_controller.text, widget.id, widget.idaccount).then((value) {
                       result = value;
                     });
                     _controller.clear();
                   });
                 },
                 child: Text("Submit")),
-            Text("Trạng thái share: $result")
           ],
         ));
   }

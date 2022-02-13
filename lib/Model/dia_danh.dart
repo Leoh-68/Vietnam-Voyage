@@ -18,7 +18,7 @@ class DiaDanh {
     tenDiaDanh = json['TenDiaDanh'];
     viTri = json['ViTri'];
     moTa = json['MoTa'];
-    hinhAnh = json['HinhAnh'];
+    hinhAnh = json['HinhAnhId'];
   }
 
   Map<String, dynamic> toJson() {

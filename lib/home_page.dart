@@ -19,6 +19,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<DiaDanh> top5 = [];
   int _counter = 1;
   int countter = 2;
   bool typing = false;
@@ -32,6 +33,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       api_lay_tai_khoan(widget.username, widget.password).then((value) {
         account = value;
+      });
+      api_Get5_DiaDanh().then((value) {
+        setState(() {
+          top5 = value;
+        });
       });
     });
     _controller = TextEditingController();
@@ -287,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        body: ListView(
+        body:ListView(
           children: [
             hotDiaDanh(),
             Row(
@@ -348,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Expanded(
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 5,
+                      itemCount: top5.length,
                       itemBuilder: (BuildContext contex, int index) {
                         _counter++;
                         return Padding(
@@ -367,14 +373,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                               width: 100,
                                               child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(10),
-                                                  child: Image(image: AssetImage('images/1.jpg'), fit: BoxFit.cover))),
+                                                  child: Image(image: AssetImage('images/' + top5[index].hinhAnh!), fit: BoxFit.cover))),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
                                 Column(
-                                  children: [Text("Đà nẵng"), Text("Việt Nam")],
+                                  children: [Text(top5[index].tenDiaDanh!), Text(top5[index].moTa!)],
                                 )
                               ],
                             ));

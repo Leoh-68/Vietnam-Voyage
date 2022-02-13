@@ -53,4 +53,5 @@ class DiaDanhController extends Controller
         $data=LuuTru::where('DiaDanhId',$req->id)->get();
         return $data;
     }
+    
 }

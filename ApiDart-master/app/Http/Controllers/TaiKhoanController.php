@@ -9,7 +9,7 @@ class TaiKhoanController extends Controller
 {
     public function dangnhap(Request $rq)
     {
-        $user = TaiKhoan::where('UserName',$rq->username)->first();
+        $user = TaiKhoan::where('username',$rq->username)->first();
         if($user!=null){
             return 1;
         }
@@ -50,4 +50,9 @@ class TaiKhoanController extends Controller
        $image=$req->image;
        return View('image',compact('image'));
    }
+    public static function gettaikhoan($username)
+    {
+        $tk = TaiKhoan::where('username',$username)->first();
+        return $tk;
+    }
 }

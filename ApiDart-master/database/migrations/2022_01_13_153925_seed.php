@@ -13,15 +13,6 @@ class Seed extends Migration
      */
     public function up()
     {
-        for($i=0;$i<7;$i++)
-        {
-            $dd=new DiaDanh;
-            $dd->TenDiaDanh="Nhà Khánh";
-            $dd->ViTri="Nhà Khánh Nè";
-            $dd->MoTa=":>";
-            $dd->HinhAnh=$i;
-            $dd->save();
-        }
     }
 
     /**

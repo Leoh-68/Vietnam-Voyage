@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use  App\Http\Controllers\DiaDanhController;
+use App\Http\Controllers\LuotLikeController;
 use  App\Http\Controllers\ShareController;
 use  App\Http\Controllers\TaiKhoanController;
 /*
@@ -63,3 +64,5 @@ Route::get('unliked', [ShareController::class,'unliked']);
 Route::post('checkTrung',[TaiKhoanController::class,'checkTrung']);
 
 Route::get('luutru',[DiaDanhController::class,'luutru']);
+
+Route::get('top',[LuotLikeController::class,'laytop5']);

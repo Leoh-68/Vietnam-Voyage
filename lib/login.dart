@@ -32,7 +32,8 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.userName!.contains(username) && taiK.password!.contains(password)) {
+      if (taiK.username!.contains(username) &&
+          taiK.password!.contains(password)) {
         check = true;
       }
     }

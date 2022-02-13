@@ -13,10 +13,6 @@ class AddIduserShare extends Migration
      */
     public function up()
     {
-        Schema::table('share',function(Blueprint $table){
-            $table->integer('idshare');
-            $table->foreign('idshare')->references('id')->on('tai_khoan');
-        });
     }
 
     /**

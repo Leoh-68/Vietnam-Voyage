@@ -1,4 +1,5 @@
 import 'package:template/Api/api.dart';
+import 'package:template/Model/luot_share.dart';
 import 'package:template/api.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
@@ -16,11 +17,14 @@ class Post extends StatefulWidget {
 }
 
 class _PostState extends State<Post> {
+  LuotShare ls = new LuotShare();
+  String aaa = "";
   int countter = 2;
   bool typing = false;
   String text = "";
   String location = "3";
   late String like;
+  late String view;
   String unlike = "0";
   Color likecolor = Colors.black;
   Color unlikecolor = Colors.black;
@@ -121,7 +125,7 @@ class _PostState extends State<Post> {
                   ? ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, int index) {
-                        return snapshot.hasData
+                        return snapshot.data![index].idshare == "0"
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
@@ -155,102 +159,55 @@ class _PostState extends State<Post> {
                                         child: Image(image: AssetImage('images/1.jpg')),
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  late String unlike;
-                                                  late String like;
-                                                  api_liked(widget.account.id.toString(), snapshot.data![index].id.toString()).then((value) {
-                                                    setState(() {
-                                                      like = value;
-                                                      if (like != "0") {
-                                                        setState(() {
-                                                          api_reLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                    FutureBuilder<String>(
+                                        future: api_countlike(snapshot.data![index].diaDanhId.toString(), snapshot.data![index].id.toString()),
+                                        builder: (contex, snapshot3) {
+                                          snapshot3.data == null ? Text("Loading........") : aaa = snapshot3.data!;
+                                          return Row(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        late String unlike;
+                                                        late String like;
+                                                        api_liked(widget.account.id.toString(), snapshot.data![index].id.toString()).then((value) {
+                                                          setState(() {
                                                             like = value;
-                                                            setState(() {
-                                                              likecolor = Colors.black;
-                                                            });
+                                                            if (like == "1") {
+                                                              api_reLike(snapshot.data![index].id.toString(), widget.account.id.toString())
+                                                                  .then((value) {
+                                                                ls = value;
+                                                              });
+                                                            } else {
+                                                              api_Like(snapshot.data![index].id.toString(), widget.account.id.toString())
+                                                                  .then((value) {
+                                                                ls = value;
+                                                              });
+                                                            }
                                                           });
                                                         });
-                                                      } else {
-                                                        setState(() {
-                                                          api_Like(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
-                                                            like = value;
-                                                            setState(() {
-                                                              likecolor = Colors.red;
-                                                            });
-                                                          });
-                                                        });
-                                                      }
-                                                    });
-                                                  });
-                                                },
-                                                icon: Icon(
-                                                  Icons.favorite,
-                                                  color: likecolor,
-                                                )),
-                                            FutureBuilder(
-                                                future: api_countlike(snapshot.data![index].id.toString()),
-                                                builder: (contex, snapshot1) {
-                                                  return snapshot1.hasData ? Text(snapshot1.data!.toString()) : CircularProgressIndicator();
-                                                })
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  late String unlike;
-                                                  late String like;
-                                                  api_unliked(widget.account.id.toString(), snapshot.data![index].id.toString()).then((value) {
-                                                    setState(() {
-                                                      like = value;
-                                                      if (like != "0") {
-                                                        setState(() {
-                                                          api_reUnLike(snapshot.data![index].id.toString(), widget.account.id.toString())
-                                                              .then((value) {
-                                                            like = value;
-                                                            setState(() {
-                                                              likecolor = Colors.black;
-                                                            });
-                                                          });
-                                                        });
-                                                      } else {
-                                                        setState(() {
-                                                          api_UnLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
-                                                            like = value;
-                                                            setState(() {
-                                                              likecolor = Colors.red;
-                                                            });
-                                                          });
-                                                        });
-                                                      }
-                                                    });
-                                                  });
-                                                },
-                                                icon: Icon(Icons.thumb_down_alt, color: unlikecolor)),
-                                            FutureBuilder(
-                                                future: api_countunlike(snapshot.data![index].id.toString()),
-                                                builder: (contex, snapshot1) {
-                                                  return snapshot1.hasData ? Text(snapshot1.data!.toString()) : CircularProgressIndicator();
-                                                })
-                                          ],
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            children: const [Icon(Icons.remove_red_eye), Text("100")],
-                                          ),
-                                          alignment: Alignment.topRight,
-                                        )
-                                      ],
-                                    )
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.favorite,
+                                                        color: likecolor,
+                                                      )),
+                                                  aaa != null ? Text(aaa) : CircularProgressIndicator()
+                                                ],
+                                              ),
+                                              Container(
+                                                child: Row(
+                                                  children: [const Icon(Icons.remove_red_eye), Text("25")],
+                                                ),
+                                                alignment: Alignment.topRight,
+                                              )
+                                            ],
+                                          );
+                                        })
                                   ],
                                 ),
                               )
-                            : const CircularProgressIndicator();
+                            : Container();
                       })
                   : const Center(
                       child: CircularProgressIndicator(),

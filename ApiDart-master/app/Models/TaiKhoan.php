@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaiKhoan extends Model
 {
-    protected $table = 'tai_khoan';
+    protected $table = 'taikhoan';
     use HasFactory;
 
     public function Share()

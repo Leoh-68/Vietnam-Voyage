@@ -1,3 +1,4 @@
+import 'package:template/Model/luot_share.dart';
 import 'package:template/Model/luu_tru.dart';
 import 'package:template/Model/share.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,18 @@ Future<List<DiaDanh>> api_GetAll_DiaDanh() async {
   return data;
 }
 
+Future<List<DiaDanh>> api_Get5_DiaDanh() async {
+  List<DiaDanh> data = [];
+  final response = await http.get(Uri.parse(urlBaseAPI + "top"));
+  if (response.statusCode == 200) {
+    List jsonRaw = json.decode(response.body);
+    data = jsonRaw.map((data) => DiaDanh.fromJson(data)).toList();
+  } else {
+    throw Exception("Something get wrong! Status code ${response.statusCode}");
+  }
+  return data;
+}
+
 Future<List<DiaDanh>> api_Find_DiaDanh(String TenDiaDanh) async {
   List<DiaDanh> data = [];
   try {
@@ -40,15 +53,15 @@ Future<List<DiaDanh>> api_Find_DiaDanh(String TenDiaDanh) async {
 
 Future<DiaDanh> api_Hot_DiaDanh() async {
   DiaDanh data = DiaDanh();
-  try {
-    final response = await http.post(Uri.parse(urlBaseAPI + "LayDiaDanhHotNhat"));
-    if (response.statusCode == 200) {
-      final jsonRaw = json.decode(response.body);
-      data = DiaDanh.fromJson(jsonRaw);
-    } else {
-      throw Exception("Something get wrong! Status code ${response.statusCode}");
-    }
-  } catch (e) {}
+
+  final response = await http.post(Uri.parse(urlBaseAPI + "LayDiaDanhHotNhat"));
+  if (response.statusCode == 200) {
+    final jsonRaw = json.decode(response.body);
+    data = DiaDanh.fromJson(jsonRaw);
+  } else {
+    throw Exception("Something get wrong! Status code ${response.statusCode}");
+  }
+
   return data;
 }
 
@@ -83,10 +96,10 @@ Future<List<Share>> api_GetShare(int IdTaiKhoan) async {
   return data;
 }
 
-Future<String> api_Post(String BaiViet, String DanhGia, String DiaDanhId, String TaiKhoanId) async {
+Future<String> api_Post(String BaiViet, String DiaDanhId, String TaiKhoanId) async {
   String result = "Thành công";
   try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId&DanhGia=$DanhGia"));
+    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId"));
     result = response.body;
   } catch (e) {}
   return result;
@@ -94,48 +107,31 @@ Future<String> api_Post(String BaiViet, String DanhGia, String DiaDanhId, String
 
 Future<List<Share>> api_GetShareHome() async {
   List<Share> data = [];
-  try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "PostShareHome"));
-    if (response.statusCode == 200) {
-      List jsonRaw = json.decode(response.body);
-      final List share = jsonRaw;
-      data = share.map((data) => Share.fromJson(data)).toList();
-    } else {
-      throw Exception("Something get wrong! Status code ${response.statusCode}");
-    }
-  } catch (e) {}
+
+  final response = await http.get(Uri.parse(urlBaseAPI + "PostShareHome"));
+  if (response.statusCode == 200) {
+    List jsonRaw = json.decode(response.body);
+    final List share = jsonRaw;
+    data = share.map((data) => Share.fromJson(data)).toList();
+  } else {
+    throw Exception("Something get wrong! Status code ${response.statusCode}");
+  }
   return data;
 }
 
-Future<String> api_Like(String id, String idaccount) async {
-  String result = "";
+Future<LuotShare> api_Like(String id, String idaccount) async {
+  LuotShare result = new LuotShare();
   final response = await http.get(Uri.parse(urlBaseAPI + "likePost?id=$id&idaccount=$idaccount"));
-  result = response.body;
+  final jsonraw = json.decode(response.body);
+  result = LuotShare.fromJson(jsonraw);
   return result;
 }
 
-Future<String> api_reLike(String id, String idaccount) async {
-  String result = "";
+Future<LuotShare> api_reLike(String id, String idaccount) async {
+  LuotShare result = new LuotShare();
   final response = await http.get(Uri.parse(urlBaseAPI + "relikePost?id=$id&idaccount=$idaccount"));
-  result = response.body;
-  return result;
-}
-
-Future<String> api_UnLike(String id, String idaccount) async {
-  String result = "";
-  try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "unlikePost?id=$id&idaccount=$idaccount"));
-    result = response.body;
-  } catch (e) {}
-  return result;
-}
-
-Future<String> api_reUnLike(String id, String idaccount) async {
-  String result = "";
-  try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "reunlikePost?id=$id&idaccount=$idaccount"));
-    result = response.body;
-  } catch (e) {}
+  final jsonraw = json.decode(response.body);
+  result = LuotShare.fromJson(jsonraw);
   return result;
 }
 
@@ -195,9 +191,9 @@ Future<String> api_Register(
 }
 
 //đếm số like
-Future<String> api_countlike(String id) async {
+Future<String> api_countlike(String iddiadanh, String idpost) async {
   String result = "";
-  final response = await http.get(Uri.parse(urlBaseAPI + "countlike?id=$id"));
+  final response = await http.get(Uri.parse(urlBaseAPI + "countlike?id=$iddiadanh&idpost=$idpost"));
   result = response.body;
   return result;
 }

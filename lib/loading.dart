@@ -11,8 +11,6 @@ class LoadingScreen extends StatefulWidget {
     required this.username,
   }) : super(key: key);
   @override
-
-  
   State<LoadingScreen> createState() => _LoadingScreen();
 }
 
@@ -28,7 +26,10 @@ class _LoadingScreen extends State<LoadingScreen> with SingleTickerProviderState
           context,
           PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-              return MyHomePage(username: widget.username,password: widget.password,);
+              return MyHomePage(
+                username: widget.username,
+                password: widget.password,
+              );
             },
             transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
               return SlideTransition(
