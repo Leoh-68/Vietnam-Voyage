@@ -57,6 +57,11 @@ use \App\Http\Controllers\AdminController;
                     </div>
                 </div>
                 <br>
+                <div>
+                        <label>Nội dung</label>
+                        <br>
+                        <textarea name="noidung" cols="100" rows="16">{{$dd->noidung}}</textarea>
+                </div>
                 <br>
                 <div>
                     <button class="btn btn-primary" type = "submit">Thêm <i class="fa fa-check"></i></button>
