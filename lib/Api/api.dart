@@ -1,3 +1,4 @@
+import 'package:template/Model/diadanh_homepage.dart';
 import 'package:template/Model/luot_share.dart';
 import 'package:template/Model/luu_tru.dart';
 import 'package:template/Model/share.dart';
@@ -11,17 +12,27 @@ import 'package:template/taikhoan.dart';
 import 'package:map_launcher/map_launcher.dart';
 
 String urlBaseAPI = "http://10.0.2.2:8001/api/";
-Future<List<DiaDanh>> api_GetAll_DiaDanh() async {
-  List<DiaDanh> data = [];
-  try {
+Future<List<DiaDanhHome>> api_GetAll_DiaDanh() async {
+  List<DiaDanhHome> data = [];
     final response = await http.get(Uri.parse(urlBaseAPI + "DiaDanh"));
     if (response.statusCode == 200) {
       List jsonRaw = json.decode(response.body);
-      data = jsonRaw.map((data) => DiaDanh.fromJson(data)).toList();
+      data = jsonRaw.map((data) => DiaDanhHome.fromJson(data)).toList();
     } else {
       throw Exception("Something get wrong! Status code ${response.statusCode}");
     }
-  } catch (e) {}
+  return data;
+}
+
+Future<List<DiaDanhHome>> api_GetAll_DiaDanh_TheoNhuCau(String nhucau) async {
+  List<DiaDanhHome> data = [];
+    final response = await http.get(Uri.parse(urlBaseAPI + "TheoNhuCau?nhucau=$nhucau"));
+    if (response.statusCode == 200) {
+      List jsonRaw = json.decode(response.body);
+      data = jsonRaw.map((data) => DiaDanhHome.fromJson(data)).toList();
+    } else {
+      throw Exception("Something get wrong! Status code ${response.statusCode}");
+    }
   return data;
 }
 

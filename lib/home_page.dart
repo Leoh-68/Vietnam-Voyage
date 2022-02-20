@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:template/ApiFolder/dia_danh_theo_nhu_cau.dart';
 import 'package:template/taikhoan.dart';
 import 'package:image_network/image_network.dart';
+import 'Model/diadanh_homepage.dart';
 import 'login.dart';
 import 'profile.dart';
 import 'Model/dia_danh.dart';
@@ -53,15 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String buildString(String word) {
-    final arr = word.split(" ");
+    final arr = word.split('');
     String a = "";
-    if (arr.length > 10) {
-      for (int i = 0; i < 10; i++) {
-        a = a + " " + arr[i];
+    if (arr.length > 15) {
+      for (int i = 0; i < 15; i++) {
+        a = a + "" + arr[i];
       }
       return a;
     } else {
-      return arr.join(" ");
+      return arr.join("");
     }
   }
 
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var dvsize = MediaQuery.of(context).size;
     Widget allDiaDanh() {
       return Expanded(
-          child: FutureBuilder<List<DiaDanh>>(
+          child: FutureBuilder<List<DiaDanhHome>>(
               future: api_GetAll_DiaDanh(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -115,24 +117,50 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               TextButton(
-                                child: Container(
-                                  padding: EdgeInsets.only(bottom: 10, left: 10),
-                                  child: Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          snapshot.data![index].tenDiaDanh!.toString(),
-                                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(bottom: 10, left: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              buildString(snapshot.data![index].tenDiaDanh!.toString()),
+                                              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(buildString(snapshot.data![index].viTri!),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ))
+                                          ],
                                         ),
-                                        Text(snapshot.data![index].viTri!,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ))
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    Container(
+                                      child: Align(
+                                          alignment: Alignment.topRight,
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              ),
+                                              Padding(padding: EdgeInsets.all(10)),
+                                              Text(snapshot.data![index].like.toString(),
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                              const Icon(
+                                                Icons.remove_red_eye,
+                                                color: Colors.green,
+                                              ),
+                                              Padding(padding: EdgeInsets.all(10)),
+                                              Text(snapshot.data![index].share.toString(),
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))
+                                            ],
+                                          )),
+                                    ),
+                                  ],
                                 ),
                                 onPressed: () {
                                   Navigator.push(
@@ -375,7 +403,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: ((dvsize.width - 18) / 100) * 25,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(240, 227, 255, 1)),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaDanhTheoNhuCau(
+                                  nhucau: "Phượt", account: widget.taiKhoan, username: widget.username, password: widget.password))).then(onGoBack);
+                    },
                     icon: Image.asset('images/mountain.png'),
                   ),
                 ),
@@ -384,7 +418,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: ((dvsize.width - 18) / 100) * 25,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(255, 255, 255, 1)),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaDanhTheoNhuCau(
+                                  nhucau: "Nghĩ dưỡng",
+                                  account: widget.taiKhoan,
+                                  username: widget.username,
+                                  password: widget.password))).then(onGoBack);
+                    },
                     icon: Image.asset('images/sea.png'),
                   ),
                 ),

@@ -45,20 +45,22 @@ class _PostState extends State<PostDetail> {
   }
 
   String buildString(String word) {
-    final arr = word.split(" ");
+    final arr = word.split('');
     String a = "";
-    if (arr.length > 10) {
-      for (int i = 0; i < 10; i++) {
-        a = a + " " + arr[i];
+    if (arr.length > 100) {
+      for (int i = 0; i < 100; i++) {
+        a = a + "" + arr[i];
       }
       return a;
     } else {
-      return arr.join(" ");
+      return arr.join("");
     }
   }
-FutureOr onGoBack(dynamic value) {
+
+  FutureOr onGoBack(dynamic value) {
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     var dvsize = MediaQuery.of(context).size;
@@ -198,7 +200,7 @@ FutureOr onGoBack(dynamic value) {
                                       child: Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
-                                          snapshot.data![index].baiViet.toString(),
+                                          buildString(snapshot.data![index].baiViet.toString()),
                                           style: TextStyle(fontSize: 20),
                                         ),
                                       ),

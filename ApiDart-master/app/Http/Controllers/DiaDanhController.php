@@ -10,6 +10,7 @@ use App\Models\LuuTru;
 use App\Models\Share;
 use App\Http\Requests\StoreDiaDanhRequest;
 use App\Http\Requests\UpdateDiaDanhRequest;
+use App\Models\LuotLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -17,7 +18,31 @@ class DiaDanhController extends Controller
 {
     public function LayDiaDanh()
     {
+
         $dd = DiaDanh::all();
+        $count=0;
+        foreach($dd as $var)
+        {
+            if(LuotLike::where('DiaDanhId',$var->id)->count()!=0)
+            {
+                $like=LuotLike::where('DiaDanhId',$var->id)->first();
+                Arr::add($dd[$count],'luotlike',$like->Liked);
+            }
+            else
+            {
+                Arr::add($dd[$count],'luotlike',0);
+            }
+            if(Share::where([['DiaDanhId',$var->id],['idshare',0]])->count()!=0)
+            {
+                $share=Share::where([['DiaDanhId',$var->id],['idshare',0]])->count();
+                Arr::add($dd[$count],'luotshare',$share);
+            }
+            else
+            {
+                Arr::add($dd[$count],'luotshare',0);
+            }
+            $count+=1;
+        }
         return response()->json($dd, 200);
     }
 
@@ -150,6 +175,65 @@ class DiaDanhController extends Controller
       }
 
       return $share;
+    }
+    public function TheoNhuCau(Request $req)
+    {
+        if($req->nhucau=="Phượt")
+        {
+            $dd=DiaDanh::where('NhuCauId',1)->get();
+            $count=0;
+            foreach($dd as $var)
+            {
+                if(LuotLike::where('DiaDanhId',$var->id)->count()!=0)
+                {
+                    $like=LuotLike::where('DiaDanhId',$var->id)->first();
+                    Arr::add($dd[$count],'luotlike',$like->Liked);
+                }
+                else
+                {
+                    Arr::add($dd[$count],'luotlike',0);
+                }
+                if(Share::where([['DiaDanhId',$var->id],['idshare',0]])->count()!=0)
+                {
+                    $share=Share::where([['DiaDanhId',$var->id],['idshare',0]])->count();
+                    Arr::add($dd[$count],'luotshare',$share);
+                }
+                else
+                {
+                    Arr::add($dd[$count],'luotshare',0);
+                }
+                $count+=1;
+            }
+            return response()->json($dd);
+        }
+        else
+        {
+            $dd=DiaDanh::where('NhuCauId',2)->get();
+            $count=0;
+            foreach($dd as $var)
+            {
+                if(LuotLike::where('DiaDanhId',$var->id)->count()!=0)
+                {
+                    $like=LuotLike::where('DiaDanhId',$var->id)->first();
+                    Arr::add($dd[$count],'luotlike',$like->Liked);
+                }
+                else
+                {
+                    Arr::add($dd[$count],'luotlike',0);
+                }
+                if(Share::where([['DiaDanhId',$var->id],['idshare',0]])->count()!=0)
+                {
+                    $share=Share::where([['DiaDanhId',$var->id],['idshare',0]])->count();
+                    Arr::add($dd[$count],'luotshare',$share);
+                }
+                else
+                {
+                    Arr::add($dd[$count],'luotshare',0);
+                }
+                $count+=1;
+            }
+            return response()->json($dd);
+        }
     }
 
 }

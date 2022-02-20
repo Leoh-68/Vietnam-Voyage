@@ -37,7 +37,14 @@ class CreateTable extends Migration
             $table->string('ViTri');
             $table->string('ViTriId');
             $table->string('MoTa');
+            $table->String('NhuCauId');
             $table->string('HinhAnhId');
+            $table->timestamps();
+            $table->SoftDeletes();
+        });
+        Schema::create('nhucau', function (Blueprint $table) {
+            $table->id();
+            $table->string('LoaiNhuCau');
             $table->timestamps();
             $table->SoftDeletes();
         });

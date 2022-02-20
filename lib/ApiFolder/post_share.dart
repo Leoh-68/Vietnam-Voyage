@@ -36,16 +36,16 @@ class _PostState extends State<Post> {
     super.initState();
   }
 
-  String buildString(String word) {
-    final arr = word.split(" ");
+String buildString(String word) {
+    final arr = word.split('');
     String a = "";
-    if (arr.length > 10) {
-      for (int i = 0; i < 10; i++) {
-        a = a + " " + arr[i];
+    if (arr.length > 100) {
+      for (int i = 0; i < 100; i++) {
+        a = a + "" + arr[i];
       }
       return a;
     } else {
-      return arr.join(" ");
+      return arr.join("");
     }
   }
 
@@ -188,7 +188,7 @@ class _PostState extends State<Post> {
                                       child: Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
-                                          snapshot.data![index].baiViet.toString(),
+                                         buildString( snapshot.data![index].baiViet.toString()),
                                           style: TextStyle(fontSize: 20),
                                         ),
                                       ),

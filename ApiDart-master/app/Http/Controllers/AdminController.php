@@ -63,6 +63,11 @@ class AdminController extends Controller
     }
     public function XLThemDiaDanh(SubmitRequest $rq)
     {
+        $nhucau=2;
+       if( $rq->nhucau=="Phượt")
+       {
+           $nhucau=1;
+       };
         $image_name = " ";
         if ($rq->has('image')==false) {
             session()->flash('fail', 'Vui lòng chọn hình ảnh');
@@ -72,7 +77,7 @@ class AdminController extends Controller
         $extention = $rq->image->extension();
         if ($size > 2000000) {
             session()->flash('fail', 'Kích thướt ảnh phải dưới 2M');
-            return View('Teacher/Post', compact('idclass'));
+            return redirect()->back();
         }
         if (
             $extention == "jpg" ||
@@ -99,6 +104,7 @@ class AdminController extends Controller
         $vt->save();
         $dd = new DiaDanh;
         $dd->TenDiaDanh = $rq->tendiadanh;
+        $dd->NhuCauId=$nhucau;
         $dd->ViTri=$rq->vungmien;
         $dd->MoTa = $rq->noidung;
         $dd->HinhAnhId=$image_name;
@@ -116,6 +122,7 @@ class AdminController extends Controller
         $dd->TenDiaDanh = $rq->tendiadanh;
         $dd->ViTriId = $vtid->id;
         $dd->MoTa = $rq->noidung;
+        $dd->NhuCauId=$nhucau;
         $dd->ViTri=$rq->vungmien;
         $dd->HinhAnhId=$image_name;
         $dd->save();
