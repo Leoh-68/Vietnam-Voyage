@@ -116,6 +116,28 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ],
                                 ),
                               ),
+                              Container(
+                                padding: EdgeInsets.only(left: 15),
+                                child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        ),
+                                        Text(snapshot.data![index].like.toString(),
+                                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                                        Padding(padding: EdgeInsets.all(10)),
+                                        const Icon(
+                                          Icons.remove_red_eye,
+                                          color: Colors.green,
+                                        ),
+                                        Text(snapshot.data![index].share.toString(),
+                                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20))
+                                      ],
+                                    )),
+                              ),
                               TextButton(
                                 child: Row(
                                   children: [
@@ -137,28 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                              ),
-                                              Padding(padding: EdgeInsets.all(10)),
-                                              Text(snapshot.data![index].like.toString(),
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                              const Icon(
-                                                Icons.remove_red_eye,
-                                                color: Colors.green,
-                                              ),
-                                              Padding(padding: EdgeInsets.all(10)),
-                                              Text(snapshot.data![index].share.toString(),
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))
-                                            ],
-                                          )),
                                     ),
                                   ],
                                 ),
@@ -515,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       child: Column(
                                                         children: [
                                                           Text(buildString(snapshot5.data![index].tenDiaDanh!)),
-                                                          Text(buildString(snapshot5.data![index].moTa!))
+                                                          Text(buildString(snapshot5.data![index].viTri!))
                                                         ],
                                                       ),
                                                     )

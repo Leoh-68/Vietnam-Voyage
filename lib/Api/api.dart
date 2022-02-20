@@ -109,7 +109,7 @@ Future<List<Share>> api_GetShare(int IdTaiKhoan) async {
 Future<List<ShareCoAccount>> api_GetShareDetail(int IdTaiKhoan, String idDiaDanh) async {
   List<ShareCoAccount> data = [];
 
-  final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?tkid=$IdTaiKhoan&id=$idDiaDanh"));
+  final response = await http.get(Uri.parse(urlBaseAPI + "PostSharee?tkid=$IdTaiKhoan&id=$idDiaDanh"));
   if (response.statusCode == 200) {
     List jsonRaw = json.decode(response.body);
     final List share = jsonRaw;
@@ -122,10 +122,8 @@ Future<List<ShareCoAccount>> api_GetShareDetail(int IdTaiKhoan, String idDiaDanh
 
 Future<String> api_Post(String BaiViet, String DiaDanhId, String TaiKhoanId, String HinhAnh) async {
   String result = "Thành công";
-  try {
     final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId&Image=$HinhAnh"));
     result = response.body;
-  } catch (e) {}
   return result;
 }
 

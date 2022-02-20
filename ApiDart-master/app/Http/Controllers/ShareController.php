@@ -58,6 +58,11 @@ class ShareController extends Controller
 
   public function baiShare(Request $req)
   {
+      $hinhanh="";
+      if($req->image!="")
+      {
+          $hinhanh=$req->Image;
+      }
     $share= new Share();
     $share->DiaDanhId=$req->id;
     $share->BaiViet=$req->BaiViet;
@@ -65,9 +70,9 @@ class ShareController extends Controller
     $share->Liked=0;
     $share->idshare=0;
     $share->View=0;
-    $share->hinhanh=$req->Image;
+    $share->hinhanh=$hinhanh;
     $share->save();
-    return 0;
+    return "Chia sẻ thành công";
   }
 
   public function baiShareHome(Request $req)

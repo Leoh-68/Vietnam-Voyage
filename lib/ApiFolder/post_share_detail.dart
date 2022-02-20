@@ -199,10 +199,12 @@ class _PostState extends State<PostDetail> {
                                       padding: EdgeInsets.only(left: 10, right: 10),
                                       child: Align(
                                         alignment: Alignment.topLeft,
-                                        child: Text(
-                                          buildString(snapshot.data![index].baiViet.toString()),
-                                          style: TextStyle(fontSize: 20),
-                                        ),
+                                        child: TextButton(
+                                            onPressed: () {},
+                                            child: Text(
+                                              buildString(snapshot.data![index].baiViet.toString()),
+                                              style: TextStyle(fontSize: 20, color: Colors.black),
+                                            )),
                                       ),
                                     ),
                                     snapshot.data![index].image != ""

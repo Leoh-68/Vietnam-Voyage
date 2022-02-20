@@ -73,7 +73,7 @@ Route::post('ThayAnh',[DiaDanhController::class,'ThayAnh']);
 
 Route::post('LuuAnh',[DiaDanhController::class,'LuuAnh']);
 
-Route::get('PostShare',[DiaDanhController::class,'PostShare']);
+Route::get('PostSharee',[DiaDanhController::class,'PostSharee']);
 
 Route::get('TheoNhuCau',[DiaDanhController::class,'TheoNhuCau']);
 ///kt

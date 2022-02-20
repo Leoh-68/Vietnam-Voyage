@@ -27,6 +27,7 @@ class _ShareaState extends State<Sharea> {
   String text = "";
   String danhGia = 'Tốt';
   String result = "";
+  String check = "";
   TaiKhoan account = TaiKhoan();
   late TextEditingController _controller;
   File? image;
@@ -190,9 +191,14 @@ class _ShareaState extends State<Sharea> {
             FlatButton(
                 onPressed: () {
                   setState(() {
-                    api_Post(_controller.text, widget.id, widget.idaccount, basename(image!.path)).then((value) {
-                      upload(image!);
-                    });
+                    if (image != null) {
+                      api_Post(_controller.text, widget.id, widget.idaccount, basename(image!.path)).then((value) {
+                        upload(image!);
+                      });
+                    } else {
+                      api_Post(_controller.text, widget.id, widget.idaccount, "").then((value) => null);
+                    }
+
                     _controller.clear();
                   });
                 },

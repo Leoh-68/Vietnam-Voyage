@@ -1,4 +1,5 @@
 import 'package:template/Api/api.dart';
+import 'package:template/ApiFolder/share_detail.dart';
 import 'package:template/Model/luot_share.dart';
 import 'package:template/Model/sharecotk.dart';
 import 'package:template/api.dart';
@@ -36,7 +37,7 @@ class _PostState extends State<Post> {
     super.initState();
   }
 
-String buildString(String word) {
+  String buildString(String word) {
     final arr = word.split('');
     String a = "";
     if (arr.length > 100) {
@@ -187,10 +188,22 @@ String buildString(String word) {
                                       padding: EdgeInsets.only(left: 10, right: 10),
                                       child: Align(
                                         alignment: Alignment.topLeft,
-                                        child: Text(
-                                         buildString( snapshot.data![index].baiViet.toString()),
-                                          style: TextStyle(fontSize: 20),
-                                        ),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => PostShareDetail(
+                                                            share: snapshot.data![index],
+                                                            username: widget.username,
+                                                            password: widget.password,
+                                                            account: widget.account,
+                                                          )));
+                                            },
+                                            child: Text(
+                                              buildString(snapshot.data![index].baiViet.toString()),
+                                              style: TextStyle(fontSize: 20, color: Colors.black),
+                                            )),
                                       ),
                                     ),
                                     snapshot.data![index].image != ""

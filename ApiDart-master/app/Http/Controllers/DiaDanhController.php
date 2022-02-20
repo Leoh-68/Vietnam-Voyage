@@ -154,7 +154,7 @@ class DiaDanhController extends Controller
         }
 
     }
-    public function PostShare(Request $req)
+    public function PostSharee(Request $req)
     {
         $count=0;
       $share=Share::orderBy('created_at','desc')->where('DiaDanhId',$req->id)->get();
