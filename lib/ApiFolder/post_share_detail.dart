@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:template/Api/api.dart';
+import 'package:template/ApiFolder/share_detail.dart';
 import 'package:template/Model/luot_share.dart';
 import 'package:template/Model/sharecotk.dart';
 import 'package:template/api.dart';
@@ -200,7 +201,17 @@ class _PostState extends State<PostDetail> {
                                       child: Align(
                                         alignment: Alignment.topLeft,
                                         child: TextButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => PostShareDetail(
+                                                            share: snapshot.data![index],
+                                                            username: widget.username,
+                                                            password: widget.password,
+                                                            account: widget.account,
+                                                          )));
+                                            },
                                             child: Text(
                                               buildString(snapshot.data![index].baiViet.toString()),
                                               style: TextStyle(fontSize: 20, color: Colors.black),

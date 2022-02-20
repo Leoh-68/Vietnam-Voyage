@@ -1,5 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:template/Api/api.dart';
@@ -62,6 +64,23 @@ class _ProfileState extends State<Profile> {
         });
       });
     });
+  }
+
+  String buildString(String word) {
+    final arr = word.split('');
+    String a = "";
+    if (arr.length > 100) {
+      for (int i = 0; i < 100; i++) {
+        a = a + "" + arr[i];
+      }
+      return a;
+    } else {
+      return arr.join("");
+    }
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
   }
 
   upload(File imageFile, String idTk) async {
@@ -133,7 +152,7 @@ class _ProfileState extends State<Profile> {
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    userpost.share![index].baiViet.toString(),
+                                    buildString(userpost.share![index].baiViet.toString()),
                                     style: TextStyle(fontSize: 20),
                                   ),
                                 ),
