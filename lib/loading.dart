@@ -2,13 +2,16 @@ import 'package:template/home_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:template/taikhoan.dart';
+
 class LoadingScreen extends StatefulWidget {
   final String username;
   final String password;
+  final TaiKhoan taiKhoan;
   const LoadingScreen({
     Key? key,
     required this.password,
-    required this.username,
+    required this.username, required this.taiKhoan,
   }) : super(key: key);
   @override
   State<LoadingScreen> createState() => _LoadingScreen();
@@ -28,7 +31,7 @@ class _LoadingScreen extends State<LoadingScreen> with SingleTickerProviderState
             pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
               return MyHomePage(
                 username: widget.username,
-                password: widget.password,
+                password: widget.password, taiKhoan: widget.taiKhoan,
               );
             },
             transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {

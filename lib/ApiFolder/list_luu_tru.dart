@@ -84,7 +84,7 @@ class _LuuTruListState extends State<LuuTruList> {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "Trần Phước Khánh",
+                        user1.hoTen.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -167,11 +167,25 @@ class _LuuTruListState extends State<LuuTruList> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Image.network(
+                                        'http://10.0.2.2:8001/images/rei.jpg',
+                                        fit: BoxFit.fill,
+                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress.expectedTotalBytes != null
+                                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      ),
                                       Text(
                                         result[index].tenLuuTru!.toString(),
                                         style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                                       ),
-                                      Text(result[index].tenLuuTru!.toString(),
+                                      Text(result[index].sDT!.toString() + ", " + result[index].diaChi!.toString(),
                                           style: TextStyle(
                                             color: Colors.black,
                                           ))

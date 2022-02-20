@@ -1,4 +1,4 @@
-@php 
+@php
 use \App\Http\Controllers\AdminController;
 @endphp
 @extends('layouts.AdminPage')
@@ -17,7 +17,7 @@ use \App\Http\Controllers\AdminController;
  <!-- Styles -->
  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
  {{-- link --}}
- 
+
  @endsection
  @section('html')
  <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -37,8 +37,8 @@ use \App\Http\Controllers\AdminController;
         <tbody>
             @foreach($diadanh as $dd)
             <tr>
-                <td>{{ $dd->tendiadanh }}</td>
-                <td>{{ AdminController::LayViTri($dd->vitriid) }}</td>
+                <td>{{ $dd->TenDiaDanh }}</td>
+                <td>{{ AdminController::LayViTri($dd->ViTriId) }}</td>
                 <td><a class="btn btn-primary" href="{{route('SuaDiaDanh',['id' => $dd->id])}}"><i class="fa fa-edit"></i> Sửa</a>
                 <a class="btn btn-danger" onclick="return confirm('Bạn có chắc không?')" href="{{route('XoaDiaDanh',['id' => $dd->id])}}"><i class="fa fa-trash"></i> Xóa</a>
                 <a class="btn btn-success" href="{{route('DSHinhAnh',['id' => $dd->id])}}"><i class="fa fa-image"></i> Hình ảnh</a></td>
@@ -49,5 +49,5 @@ use \App\Http\Controllers\AdminController;
     </div>
   </div>
  @endsection
- 
+
 

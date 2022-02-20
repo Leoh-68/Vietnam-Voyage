@@ -64,28 +64,60 @@ class AdminController extends Controller
     public function XLThemDiaDanh(SubmitRequest $rq)
     {
         $image_name = " ";
+        if ($rq->has('image')==false) {
+            session()->flash('fail', 'Vui lòng chọn hình ảnh');
+            return redirect()->back();
+        }
+        $size = $rq->image->getSize();
+        $extention = $rq->image->extension();
+        if ($size > 2000000) {
+            session()->flash('fail', 'Kích thướt ảnh phải dưới 2M');
+            return View('Teacher/Post', compact('idclass'));
+        }
+        if (
+            $extention == "jpg" ||
+            $extention == "jpeg" ||
+            $extention == "gif" ||
+            $extention == "tiff" ||
+            $extention == "psd" ||
+            $extention == "png" ||
+            $extention == "jfif" ||
+            $extention == "jpg"
+        ) {
+            $image = $rq->image;
+            $image_name = $image->getClientoriginalName();
+            $image->move(public_path('images'), $image_name);
+        } else {
+            session()->flash('fail', 'Tệp được chọn phải là hình ảnh');
+            return redirect()->back();
+        }
         $vtid = ViTri::where([['kinhdo',$rq->kinhdo],['vido',$rq->vido]])->first();
         if($vtid==null){
         $vt = new ViTri;
-        $vt->kinhdo = $rq->kinhdo;
-        $vt->vido = $rq->vido;
+        $vt->KinhDo = $rq->kinhdo;
+        $vt->ViDo = $rq->vido;
         $vt->save();
         $dd = new DiaDanh;
-        $dd->tendiadanh = $rq->tendiadanh;
-        $dd->vitriid = $vt->id;
-        $dd->noidung = $rq->noidung;
+        $dd->TenDiaDanh = $rq->tendiadanh;
+        $dd->ViTri=$rq->vungmien;
+        $dd->MoTa = $rq->noidung;
+        $dd->HinhAnhId=$image_name;
+        $dd->ViTriId = $vt->id;
         $dd->save();
-        $ddid = DiaDanh::where([['tendiadanh',$dd->tendiadanh],['vitriid',$dd->vitriid],['deleted_at',null]])->first();
+        $ddid = DiaDanh::where([['tendiadanh',$dd->TenDiaDanh],['vitriid',$dd->ViTriId],['deleted_at',null]])->first();
         $ha = new HinhAnhDiaDanh;
         $ha->diadanhid = $ddid->id;
         $ha->duongdan = "defaultimg.jpg";
         $ha->save();
         return redirect()->route('DiaDanh');
         }
+        $ha = new HinhAnhDiaDanh;
         $dd = new DiaDanh;
-        $dd->tendiadanh = $rq->tendiadanh;
-        $dd->vitriid = $vtid->id;
-        $dd->noidung = $rq->noidung;
+        $dd->TenDiaDanh = $rq->tendiadanh;
+        $dd->ViTriId = $vtid->id;
+        $dd->MoTa = $rq->noidung;
+        $dd->ViTri=$rq->vungmien;
+        $dd->HinhAnhId=$image_name;
         $dd->save();
         $ddid = DiaDanh::where([['tendiadanh',$dd->tendiadanh],['vitriid',$dd->vitriid],['deleted_at',null]])->first();
         $ha->diadanhid = $ddid->id;
@@ -115,21 +147,21 @@ class AdminController extends Controller
         $dd = DiaDanh::find($id);
         if($vtid==null){
         $vt = new ViTri;
-        $vt->kinhdo = $rq->kinhdo;
-        $vt->vido = $rq->vido;
+        $vt->KinhDo = $rq->kinhdo;
+        $vt->ViDo = $rq->vido;
         $vt->save();
-        $dd->tendiadanh = $rq->tendiadanh;
-        $dd->vitriid = $vt->id;
-        $dd->noidung = $rq->noidung;
+        $dd->TenDiaDanh = $rq->tendiadanh;
+        $dd->ViTriId = $vt->id;
+        $dd->NoiDung = $rq->noidung;
         $dd->updated_at = date("Y-m-d");
         $dd->save();
         return redirect()->route('DiaDanh');
         }
         $dd = DiaDanh::find($id);
-        $dd->tendiadanh = $rq->tendiadanh;
-        $dd->vitriid = $vtid->id;
-        $dd->noidung = $rq->noidung;
-        dd($rq->noidung);
+        $dd->TenDiaDanh = $rq->tendiadanh;
+        $dd->ViTriId = $vtid->id;
+        $dd->NoiDung = $rq->noidung;
+        // dd($rq->noidung);
         $dd->updated_at = date("Y-m-d");
         $dd->save();
         return redirect()->route('DiaDanh');

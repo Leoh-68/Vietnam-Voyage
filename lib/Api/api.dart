@@ -4,6 +4,7 @@ import 'package:template/Model/share.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:template/Model/dia_danh.dart';
+import 'package:template/Model/sharecotk.dart';
 import 'package:template/Model/taikhoancoshare.dart';
 import 'package:template/Model/vi_tri.dart';
 import 'package:template/taikhoan.dart';
@@ -26,14 +27,12 @@ Future<List<DiaDanh>> api_GetAll_DiaDanh() async {
 
 Future<List<DiaDanh>> api_Get5_DiaDanh() async {
   List<DiaDanh> data = [];
+  List<DiaDanh> dataa = [];
   final response = await http.get(Uri.parse(urlBaseAPI + "top"));
-  if (response.statusCode == 200) {
-    List jsonRaw = json.decode(response.body);
-    data = jsonRaw.map((data) => DiaDanh.fromJson(data)).toList();
-  } else {
-    throw Exception("Something get wrong! Status code ${response.statusCode}");
-  }
-  return data;
+  List jsonRaw = json.decode(response.body);
+  data = jsonRaw.map((data) => DiaDanh.fromJson(data)).toList();
+  dataa = data;
+  return dataa;
 }
 
 Future<List<DiaDanh>> api_Find_DiaDanh(String TenDiaDanh) async {
@@ -65,7 +64,7 @@ Future<DiaDanh> api_Hot_DiaDanh() async {
   return data;
 }
 
-Future<List<DiaDanh>> api_Finds_DiaDanh(String TenDiaDanh) async {
+Future<List<DiaDanh>> api_Finds_DiaDanh(String TenDiaDanh, String mode) async {
   List<DiaDanh> data = [];
   try {
     final response = await http.post(Uri.parse(urlBaseAPI + "TimKiem"), body: {"name": "$TenDiaDanh"});
@@ -96,23 +95,37 @@ Future<List<Share>> api_GetShare(int IdTaiKhoan) async {
   return data;
 }
 
-Future<String> api_Post(String BaiViet, String DiaDanhId, String TaiKhoanId) async {
+Future<List<ShareCoAccount>> api_GetShareDetail(int IdTaiKhoan, String idDiaDanh) async {
+  List<ShareCoAccount> data = [];
+
+  final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?tkid=$IdTaiKhoan&id=$idDiaDanh"));
+  if (response.statusCode == 200) {
+    List jsonRaw = json.decode(response.body);
+    final List share = jsonRaw;
+    data = share.map((data) => ShareCoAccount.fromJson(data)).toList();
+  } else {
+    throw Exception("Something get wrong! Status code ${response.statusCode}");
+  }
+  return data;
+}
+
+Future<String> api_Post(String BaiViet, String DiaDanhId, String TaiKhoanId, String HinhAnh) async {
   String result = "Thành công";
   try {
-    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId"));
+    final response = await http.get(Uri.parse(urlBaseAPI + "PostShare?id=$DiaDanhId&BaiViet=$BaiViet&TaiKhoanID=$TaiKhoanId&Image=$HinhAnh"));
     result = response.body;
   } catch (e) {}
   return result;
 }
 
-Future<List<Share>> api_GetShareHome() async {
-  List<Share> data = [];
+Future<List<ShareCoAccount>> api_GetShareHome(String IdAccount) async {
+  List<ShareCoAccount> data = [];
 
-  final response = await http.get(Uri.parse(urlBaseAPI + "PostShareHome"));
+  final response = await http.get(Uri.parse(urlBaseAPI + "PostShareHome?tkid=$IdAccount"));
   if (response.statusCode == 200) {
     List jsonRaw = json.decode(response.body);
     final List share = jsonRaw;
-    data = share.map((data) => Share.fromJson(data)).toList();
+    data = share.map((data) => ShareCoAccount.fromJson(data)).toList();
   } else {
     throw Exception("Something get wrong! Status code ${response.statusCode}");
   }
@@ -143,6 +156,14 @@ Future<List<TaiKhoan>> api_lay_ds_tai_khoan() async {
   return TK;
 }
 
+Future<TaiKhoan> api_lay_tai_khoan_id(String username) async {
+  TaiKhoan TK = new TaiKhoan();
+  final response = await http.post(Uri.parse(urlBaseAPI + "accountinfoid"), body: {'id': "$username"});
+  final tk = json.decode(response.body);
+  TK = TaiKhoan.fromJson(tk);
+  return TK;
+}
+
 Future<TaiKhoan> api_lay_tai_khoan(String username, String pass) async {
   TaiKhoan TK = new TaiKhoan();
   final response = await http.post(Uri.parse(urlBaseAPI + "accountinfo"), body: {'username': "$username", 'password': "$pass"});
@@ -161,17 +182,19 @@ Future<String> api_check_tai_khoan(String username, String pass) async {
 
 Future<TaiKhoancoShare> api_share_tai_khoan(String id) async {
   TaiKhoancoShare result = TaiKhoancoShare();
-  final response = await http.post(Uri.parse(urlBaseAPI + "TaiKhoan"), body: {'id': "$id"});
+  final response = await http.post(Uri.parse(urlBaseAPI + "TaiKhoan"), body: {'id': id});
   final tk = json.decode(response.body);
   result = TaiKhoancoShare.fromJson(tk);
   return result;
 }
 
 Future<ViTri> api_GetLocation(String id) async {
-  ViTri data = new ViTri();
+  ViTri data = ViTri();
+  ViTri dataa = ViTri();
   final response = await http.get(Uri.parse(urlBaseAPI + "ViTri?id=$id"));
   final jsonRaw = json.decode(response.body);
-  data = ViTri.fromJson(jsonRaw);
+  dataa = ViTri.fromJson(jsonRaw);
+  data = dataa;
   return data;
 }
 

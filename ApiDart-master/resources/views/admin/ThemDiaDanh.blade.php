@@ -13,15 +13,28 @@
  <!-- Styles -->
  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
  {{-- link --}}
- 
+
  @endsection
  @section('html')
  <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
  @endsection
  @section('func')
- <form action="{{route('XLThemDiaDanh')}}" method="POST">
+ <form action="{{route('XLThemDiaDanh')}}" method="POST"  enctype="multipart/form-data">
  @csrf
     <div class="">
+        @if (session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    @if (session()->has('fail'))
+        <div class="alert alert-danger" style="width: 500px">
+            {{ session()->get('fail') }}
+        </div>
+    @endif
         <div class="container">
         <a class="btn btn-primary" href="{{route('DiaDanh')}}"><i class="fa fa-arrow-alt-circle-left"></i> Quay lại</a>
             <div>
@@ -37,9 +50,9 @@
                         @enderror
                     </div>
                     <div class="fixedbox">
-                        <label>Vị Trí</label><span id="font"> *</span>
+                        <label>Vị Trí Tọa Độ</label><span id="font"> *</span>
                         <br>
-                        X: 
+                        X:
                         <input type="text" name="kinhdo"/>
                         Y:
                         <input type="text" name="vido"/>
@@ -59,6 +72,18 @@
                             <br>
                             <textarea name="noidung" cols="100" rows="16"></textarea>
                     </div>
+                    <div>
+                        <label>Vị trí</label>
+                        <br>
+                        <textarea name="vungmien" cols="30" rows="10"></textarea>
+                     </div>
+                     <div class="form-group">
+                        <label for="">Hình ảnh</label>
+                        <input type="file" class="form-control"  name="image">
+                        @error('classcode')
+                        <span style="color: red">{{$message}}</span>
+                        @enderror
+                    </div>
                 <br>
                 <div>
                     <button class="btn btn-primary" type = "submit">Thêm <i class="fa fa-check"></i></button>
@@ -68,5 +93,5 @@
     </div>
 </form>
  @endsection
- 
+
 

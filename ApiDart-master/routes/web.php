@@ -24,8 +24,7 @@ Route::get('/', function () {
 Route::post('/',[DiaDanhController::class,'ThemDiaDanh'])->name("add");
 
 
-// Route::get('/image',[TaiKhoanController::class,'image'])->name("image");
-// })->name('image');
+Route::get('/image',[TaiKhoanController::class,'image'])->name("image");
 Route::get('/', [DangNhapController::class,'xulyTaiKhoan'])->name('login');
 Route::post('/', [DangNhapController::class,'xuLyDangNhap'])->name('xl-dang-nhap');
 Route::get('/Admin/DiaDanh', [AdminController::class, 'DSDiaDanh'])->name('DiaDanh');

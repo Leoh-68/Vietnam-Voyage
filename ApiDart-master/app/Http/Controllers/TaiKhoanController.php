@@ -24,6 +24,11 @@ class TaiKhoanController extends Controller
         $tk=TaiKhoan::where([['UserName',$req->username],['Password',$req->password]])->first();
         return $tk;
     }
+    public function layTaiKhoanid(Request $req)
+    {
+        $tk=TaiKhoan::find($req->id);
+        return $tk;
+    }
     public function register(Request $req)
     {
         if($req->username==null||$req->password==null||$req->hoten==null||$req->email==null||$req->sdt==null)
@@ -36,6 +41,7 @@ class TaiKhoanController extends Controller
         $tk->HoTen=$req->hoten;
         $tk->Email=$req->email;
         $tk->SDT=$req->sdt;
+        $tk->hinhanh="3.jpg";
         $tk->save();
         return 1;
     }

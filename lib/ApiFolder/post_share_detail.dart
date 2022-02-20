@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:template/Api/api.dart';
 import 'package:template/Model/luot_share.dart';
 import 'package:template/Model/sharecotk.dart';
@@ -9,16 +11,17 @@ import 'package:template/Model/share.dart';
 import 'package:template/profileclick.dart';
 import 'package:template/taikhoan.dart';
 
-class Post extends StatefulWidget {
+class PostDetail extends StatefulWidget {
   final String username;
   final String password;
   final TaiKhoan account;
-  const Post({Key? key, required this.username, required this.password, required this.account}) : super(key: key);
+  final String idPost;
+  const PostDetail({Key? key, required this.idPost, required this.username, required this.password, required this.account}) : super(key: key);
   @override
-  State<Post> createState() => _PostState();
+  State<PostDetail> createState() => _PostState();
 }
 
-class _PostState extends State<Post> {
+class _PostState extends State<PostDetail> {
   LuotShare ls = new LuotShare();
   String aaa = "";
   int countter = 2;
@@ -28,12 +31,17 @@ class _PostState extends State<Post> {
   late String like;
   late String view;
   String unlike = "0";
-  TaiKhoan user1 = new TaiKhoan();
   Color likecolor = Colors.black;
   Color unlikecolor = Colors.black;
+
   @override
   void initState() {
     super.initState();
+    // api_lay_tai_khoan(widget.username, widget.password).then((value) {
+    //   setState(() {
+    //     user1 = value;
+    //   });
+    // });
   }
 
   String buildString(String word) {
@@ -48,7 +56,9 @@ class _PostState extends State<Post> {
       return arr.join(" ");
     }
   }
-
+FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     var dvsize = MediaQuery.of(context).size;
@@ -73,7 +83,7 @@ class _PostState extends State<Post> {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage('http://10.0.2.2:8001/images/' + user1.image.toString()),
+                        backgroundImage: NetworkImage('http://10.0.2.2:8001/images/' + widget.account.image.toString()),
                       ),
                       Text(
                         widget.account.hoTen.toString(),
@@ -133,7 +143,7 @@ class _PostState extends State<Post> {
           ),
         ),
         body: FutureBuilder<List<ShareCoAccount>>(
-            future: api_GetShareHome(widget.account.id.toString()),
+            future: api_GetShareDetail(int.parse(widget.account.id.toString()), widget.idPost),
             builder: (contex, snapshot) {
               return snapshot.hasData
                   ? ListView.builder(

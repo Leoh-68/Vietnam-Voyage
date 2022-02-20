@@ -17,7 +17,8 @@ class CreateTable extends Migration
             $table->id();
             $table->string('UserName');
             $table->string('Password');
-            $table->string('HoTeb');
+            $table->string('HoTen');
+            $table->string('hinhanh');
             $table->string('SDT',10)->default('0');
             $table->string('Email');
             $table->timestamps();
@@ -25,7 +26,6 @@ class CreateTable extends Migration
         });
         Schema::create('vitri', function (Blueprint $table) {
             $table->id();
-            $table->string('DiaDanhId');
             $table->double('KinhDo');
             $table->double('ViDo');
             $table->timestamps();
@@ -35,6 +35,7 @@ class CreateTable extends Migration
             $table->id();
             $table->string('TenDiaDanh');
             $table->string('ViTri');
+            $table->string('ViTriId');
             $table->string('MoTa');
             $table->string('HinhAnhId');
             $table->timestamps();
@@ -57,6 +58,7 @@ class CreateTable extends Migration
             $table->foreign('TaiKhoanId')->references('id')->on('taikhoan');
             $table->string('View')->default('0');
             $table->string('Liked');
+            $table->string('hinhanh');
             $table->string('idshare');
             $table->timestamps();
             $table->SoftDeletes();

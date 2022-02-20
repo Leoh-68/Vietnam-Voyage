@@ -30,21 +30,22 @@ class UserPreferences {
       User(backGroundImage: "images/1.jpg", imagePath: "images/2.jpg", name: "Trần Phước Khánh", email: "kamdmjjj@gmail.com", about: "Thích ở nhà");
 }
 
-class Profile extends StatefulWidget {
+class ProfileClick extends StatefulWidget {
   final String username;
   final String password;
-
-  const Profile({Key? key, required this.password, required this.username}) : super(key: key);
+  final String idAccount;
+  const ProfileClick({Key? key, required this.password, required this.username, required this.idAccount}) : super(key: key);
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ProfileClick> createState() => _ProfileClickState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileClickState extends State<ProfileClick> {
   bool liked = false;
   bool unliked = false;
   Color likecolor = Colors.black;
   Color unlikecolor = Colors.black;
   TaiKhoan user1 = TaiKhoan();
+  TaiKhoan userlog = TaiKhoan();
   TaiKhoancoShare userpost = TaiKhoancoShare();
   LuotShare ls = LuotShare();
   String aaa = "";
@@ -52,11 +53,16 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    api_lay_tai_khoan(widget.username, widget.password).then((value1) {
+    api_lay_tai_khoan(widget.username, widget.password).then((value) {
+      setState(() {
+        userlog = value;
+      });
+    });
+    api_lay_tai_khoan_id(widget.idAccount).then((value1) {
       setState(() {
         user1 = value1;
       });
-      api_share_tai_khoan(user1.id.toString()).then((value) {
+      api_share_tai_khoan(widget.idAccount.toString()).then((value) {
         setState(() {
           userpost = value;
         });
@@ -156,19 +162,19 @@ class _ProfileState extends State<Profile> {
                                           children: [
                                             IconButton(
                                                 onPressed: () {
-                                                  //  if (snapshot.data![index].isFavor.toString() == "co") {
-                                                  //         api_reLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
-                                                  //           setState(() {});
-                                                  //         });
-                                                  //       } else {
-                                                  //         api_Like(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
-                                                  //           setState(() {});
-                                                  //         });
-                                                  //       }
+                                                  if (userpost.share![index].isFavor.toString() == "co") {
+                                                    api_reLike(userpost.share![index].id.toString(), userlog.id.toString()).then((value) {
+                                                      setState(() {});
+                                                    });
+                                                  } else {
+                                                    api_Like(userpost.share![index].id.toString(), userlog.id.toString()).then((value) {
+                                                      setState(() {});
+                                                    });
+                                                  }
                                                 },
                                                 icon: Icon(
                                                   Icons.favorite,
-                                                  color: likecolor,
+                                                  color: userpost.share![index].isFavor.toString() == "co" ? Colors.red : Colors.black,
                                                 )),
                                             aaa != null ? Text(aaa) : CircularProgressIndicator()
                                           ],
@@ -232,13 +238,7 @@ class _ProfileState extends State<Profile> {
                               padding: const EdgeInsets.only(top: 150),
                               child: Center(
                                   child: TextButton(
-                                onPressed: () async {
-                                  await getImagefromGallery().then((value) {
-                                    setState(() {
-                                      upload(image!, user1.id.toString());
-                                    });
-                                  });
-                                },
+                                onPressed: () {},
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
                                   radius: 110,

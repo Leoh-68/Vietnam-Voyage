@@ -1,5 +1,7 @@
-import 'package:template/taikhoan.dart';
+import 'dart:async';
 
+import 'package:template/taikhoan.dart';
+import 'package:image_network/image_network.dart';
 import 'login.dart';
 import 'profile.dart';
 import 'Model/dia_danh.dart';
@@ -12,7 +14,8 @@ import 'dia_danh_search.dart';
 class MyHomePage extends StatefulWidget {
   final String username;
   final String password;
-  const MyHomePage({Key? key, required this.username, required this.password}) : super(key: key);
+  final TaiKhoan taiKhoan;
+  const MyHomePage({Key? key, required this.username, required this.password, required this.taiKhoan}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -22,8 +25,11 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DiaDanh> top5 = [];
   int _counter = 1;
   int countter = 2;
+  int a = 0;
   bool typing = false;
   String text = "";
+  String findchoose = 'Tên địa danh';
+  String hint = 'Tìm kiếm';
   String location = "3";
   late TextEditingController _controller;
   TaiKhoan account = new TaiKhoan();
@@ -31,16 +37,32 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     setState(() {
-      api_lay_tai_khoan(widget.username, widget.password).then((value) {
-        account = value;
-      });
+      // api_lay_tai_khoan(widget.username, widget.password).then((value1) {
+      //   account = value1;
+      // });
       api_Get5_DiaDanh().then((value) {
-        setState(() {
-          top5 = value;
-        });
+        top5 = value;
       });
     });
     _controller = TextEditingController();
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    a++;
+    setState(() {});
+  }
+
+  String buildString(String word) {
+    final arr = word.split(" ");
+    String a = "";
+    if (arr.length > 10) {
+      for (int i = 0; i < 10; i++) {
+        a = a + " " + arr[i];
+      }
+      return a;
+    } else {
+      return arr.join(" ");
+    }
   }
 
   @override
@@ -82,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 width: dvsize.width - 32,
                                                 child: ClipRRect(
                                                     borderRadius: BorderRadius.circular(10),
-                                                    child: Image(image: AssetImage('images/' + snapshot.data![index].hinhAnh!), fit: BoxFit.cover))),
+                                                    child: Image.network('http://10.0.2.2:8001/images/' + snapshot.data![index].hinhAnh!,
+                                                        fit: BoxFit.cover))),
                                             onPressed: () {},
                                           )
                                         ],
@@ -116,13 +139,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (contex) => Detail(
+                                              account: widget.taiKhoan,
                                               username: widget.username,
                                               password: widget.password,
                                               mota: snapshot.data![index].moTa.toString(),
                                               id: snapshot.data![index].id.toString(),
                                               name: snapshot.data![index].tenDiaDanh.toString(),
                                               location: snapshot.data![index].viTri!,
-                                              image: snapshot.data![index].hinhAnh!)));
+                                              image: snapshot.data![index].hinhAnh!))).then(onGoBack);
                                 },
                               )
                             ],
@@ -139,14 +163,32 @@ class _MyHomePageState extends State<MyHomePage> {
             return snapshot.hasData
                 ? Stack(
                     children: [
-                      Container(
-                        height: 300,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage('images/' + snapshot.data!.hinhAnh!), fit: BoxFit.cover),
-                            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
-                            boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6)]),
-                      ),
+                      TextButton(
+                          onPressed: () {
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (contex) => Detail(
+                                          account: widget.taiKhoan,
+                                          username: widget.username,
+                                          password: widget.password,
+                                          mota: snapshot.data!.moTa.toString(),
+                                          id: snapshot.data!.id.toString(),
+                                          name: snapshot.data!.tenDiaDanh.toString(),
+                                          location: snapshot.data!.viTri!,
+                                          image: snapshot.data!.hinhAnh!))).then(onGoBack);
+                            }
+                          },
+                          child: Container(
+                            height: 300,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                image:
+                                    DecorationImage(image: NetworkImage('http://10.0.2.2:8001/images/' + snapshot.data!.hinhAnh!), fit: BoxFit.cover),
+                                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
+                                boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6)]),
+                          )),
                       Positioned(
                           left: 20,
                           bottom: 20,
@@ -192,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     style: const TextStyle(color: Colors.white),
                     controller: _controller,
-                    decoration: const InputDecoration(border: InputBorder.none, hintText: 'Tìm kiếm', hintStyle: TextStyle(color: Colors.white)),
+                    decoration: InputDecoration(border: InputBorder.none, hintText: hint, hintStyle: TextStyle(color: Colors.white)),
                     onChanged: (String value) {
                       setState(
                         () {
@@ -204,6 +246,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               : const Text("Bạn muốn đi đâu ?")),
           actions: [
+            typing
+                ? DropdownButton<String>(
+                    items: <String>['Tên địa danh', 'Vùng miền'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: findchoose = value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (findchoose) {
+                      setState(() {
+                        hint = findchoose!;
+                      });
+                    },
+                  )
+                : Container(),
             IconButton(
               icon: Icon(typing ? Icons.done : Icons.search),
               onPressed: () {
@@ -212,7 +269,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Search(username: widget.username, password: widget.password, name: _controller.text)));
+                            builder: (context) => Search(
+                                account: widget.taiKhoan,
+                                username: widget.username,
+                                password: widget.password,
+                                name: _controller.text,
+                                mode: findchoose))).then(onGoBack);
                   }
                   typing = !typing;
                 });
@@ -231,10 +293,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage("images/2.jpg"),
+                        backgroundImage: NetworkImage('http://10.0.2.2:8001/images/' + account.image.toString()),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        widget.taiKhoan.hoTen.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -293,7 +355,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        body:ListView(
+        body: ListView(
           children: [
             hotDiaDanh(),
             Row(
@@ -332,8 +394,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromRGBO(191, 255, 252, 1)),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Post(account: account, username: widget.username, password: widget.password)));
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Post(account: widget.taiKhoan, username: widget.username, password: widget.password)))
+                          .then(onGoBack);
                     },
                     icon: Icon(Icons.content_paste_outlined),
                   ),
@@ -349,43 +414,76 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   )),
             ),
-            Container(
-              height: 130,
-              child: Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: top5.length,
-                      itemBuilder: (BuildContext contex, int index) {
-                        _counter++;
-                        return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      height: 80,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                                              height: 100,
-                                              width: 100,
-                                              child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  child: Image(image: AssetImage('images/' + top5[index].hinhAnh!), fit: BoxFit.cover))),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [Text(top5[index].tenDiaDanh!), Text(top5[index].moTa!)],
-                                )
-                              ],
-                            ));
-                      })),
-            ),
+            FutureBuilder<List<DiaDanh>>(
+                future: api_Get5_DiaDanh(),
+                builder: (context, snapshot5) {
+                  return snapshot5.hasData
+                      ? Container(
+                          height: 145,
+                          child: Expanded(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: snapshot5.data!.length,
+                                  itemBuilder: (BuildContext contex, int index) {
+                                    _counter++;
+                                    return SizedBox(
+                                      child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (contex) => Detail(
+                                                        account: widget.taiKhoan,
+                                                        username: widget.username,
+                                                        password: widget.password,
+                                                        mota: snapshot5.data![index].moTa.toString(),
+                                                        id: snapshot5.data![index].id.toString(),
+                                                        name: snapshot5.data![index].tenDiaDanh.toString(),
+                                                        location: snapshot5.data![index].viTri!,
+                                                        image: snapshot5.data![index].hinhAnh!))).then(onGoBack);
+                                          },
+                                          child: SizedBox(
+                                            height: 200,
+                                            child: Padding(
+                                                padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+                                                child: Column(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        Container(
+                                                          height: 80,
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
+                                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                                                                  height: 100,
+                                                                  width: 100,
+                                                                  child: ClipRRect(
+                                                                      borderRadius: BorderRadius.circular(10),
+                                                                      child: Image.network(
+                                                                          'http://10.0.2.2:8001/images/' + snapshot5.data![index].hinhAnh!,
+                                                                          fit: BoxFit.cover))),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      child: Column(
+                                                        children: [
+                                                          Text(buildString(snapshot5.data![index].tenDiaDanh!)),
+                                                          Text(buildString(snapshot5.data![index].moTa!))
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                )),
+                                          )),
+                                    );
+                                  })),
+                        )
+                      : CircularProgressIndicator();
+                }),
             allDiaDanh()
           ],
         ));

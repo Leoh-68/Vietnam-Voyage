@@ -5,6 +5,8 @@ use App\Models\Share;
 use App\Models\DiaDanh;
 use App\Models\HinhAnhDiaDanh;
 use App\Models\LuotLike;
+use App\Models\TaiKhoan;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 
 class ShareController extends Controller
@@ -63,13 +65,31 @@ class ShareController extends Controller
     $share->Liked=0;
     $share->idshare=0;
     $share->View=0;
+    $share->hinhanh=$req->Image;
     $share->save();
     return 0;
   }
 
-  public function baiShareHome()
+  public function baiShareHome(Request $req)
   {
-      $share=Share::all();
+      $count=0;
+      $share=Share::orderBy('created_at','desc')->get();
+      foreach($share as $var)
+      {
+          $tk=TaiKhoan::find($var->TaiKhoanId);
+          Arr::add($share[$count], "TaiKhoan", $tk);
+          $like=Share::where([['TaiKhoanId',$req->tkid],['idshare',$var->id],['Liked','1']])->count();
+          if($like==0)
+          {
+            Arr::add($share[$count], "isFavor", "ko");
+          }
+          else
+          {
+            Arr::add($share[$count], "isFavor", "co");
+          }
+          $count+=1;
+      }
+
       return $share;
   }
 
@@ -83,8 +103,10 @@ class ShareController extends Controller
     $new->Liked=1;
     $new->idshare=$share->id;
     $new->View=0;
+    $new->hinhanh="";
     $new->save();
     $share->View+=1;
+    $share->save();
     $likecount=LuotLike::where('DiaDanhId',$share->DiaDanhId)->count();
     if($likecount==0)
     {
@@ -93,6 +115,7 @@ class ShareController extends Controller
         $like->Liked=1;
         $like->View=1;
         $like->save();
+        Arr::add($like, "isFavorite", "co");
         return $like;
     }
     else
@@ -101,8 +124,12 @@ class ShareController extends Controller
         $like->Liked+=1;
         $like->View+=1;
         $like->save();
+        Arr::add($like, "isFavorite", "co");
         return $like;
     }
+
+
+
   }
 
   public function relikePost(Request $req)
@@ -113,6 +140,7 @@ class ShareController extends Controller
     $like=LuotLike::where('DiaDanhId',$share->DiaDanhId)->first();
     $like->Liked-=1;
     $like->save();
+    Arr::add($like, "isFavorite", "ko");
     return $like;
   }
 
@@ -142,7 +170,12 @@ class ShareController extends Controller
 //     return $like;
 //   }
   //Lấy số like, unlike bài viết
-  public function countlike(Request $req)
+//   public function countlike(Request $req)
+//   {
+
+//     return $count;
+//   }
+   public function countlike(Request $req)
   {
      $like=LuotLike::where('DiaDanhId',$req->id)->first();
      if($like ==null)
@@ -154,11 +187,6 @@ class ShareController extends Controller
      }
      $count=Share::where([['idshare',$req->idpost],['Liked','1']])->count();
     return $count;
-  }
-  public function countunlike(Request $req)
-  {
-    $like=Share::where([['idshare',$req->id],['Unliked','1']])->count();
-    return $like;
   }
   //kiem tra da unlike, like
   public function liked(Request $req)

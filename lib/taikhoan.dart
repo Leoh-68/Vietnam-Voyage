@@ -5,6 +5,7 @@ class TaiKhoan {
   String? hoTen;
   String? sdt;
   String? email;
+  String? image;
   String? createdAt;
   String? updatedAt;
   Null? deletedAt;
@@ -18,6 +19,7 @@ class TaiKhoan {
     hoTen = json['HoTen'];
     sdt = json['SDT'];
     email = json['Email'];
+    image = json['hinhanh'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];

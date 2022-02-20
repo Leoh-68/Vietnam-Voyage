@@ -6,6 +6,8 @@ use  App\Http\Controllers\DiaDanhController;
 use App\Http\Controllers\LuotLikeController;
 use  App\Http\Controllers\ShareController;
 use  App\Http\Controllers\TaiKhoanController;
+use App\Http\Controllers\ViTriController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,7 +51,7 @@ Route::get('unlikePost', [ShareController::class,'unlikePost']);
 Route::get('reunlikePost', [ShareController::class,'reunlikePost']);
 
 Route::post('accountinfo', [TaiKhoanController::class,'layTaiKhoan']);
-
+Route::post('accountinfoid', [TaiKhoanController::class,'layTaiKhoanid']);
 Route::get('ViTri',[DiaDanhController::class,'layToaDoTheoID']);
 
 Route::post('dangky', [TaiKhoanController::class,'register']);
@@ -66,3 +68,11 @@ Route::post('checkTrung',[TaiKhoanController::class,'checkTrung']);
 Route::get('luutru',[DiaDanhController::class,'luutru']);
 
 Route::get('top',[LuotLikeController::class,'laytop5']);
+
+Route::post('ThayAnh',[DiaDanhController::class,'ThayAnh']);
+
+Route::post('LuuAnh',[DiaDanhController::class,'LuuAnh']);
+
+Route::get('PostShare',[DiaDanhController::class,'PostShare']);
+///kt
+Route::get('logkt',[ViTriController::class,'logkt']);

@@ -90,7 +90,7 @@ class RegisterPageState extends State<Register> {
                         //   height: 100,
                         //   width: 100,
                         // ),
-                        const Padding(padding: EdgeInsets.only(bottom: 50)),
+                        const Padding(padding: EdgeInsets.only(bottom: 10)),
                         TextField(
                             controller: username,
                             decoration: const InputDecoration(
@@ -201,9 +201,12 @@ class RegisterPageState extends State<Register> {
                                 },
                                 style: ButtonStyle(backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.black)),
                                 child: state == ""
-                                    ? Text(
-                                        "Đăng ký",
-                                        style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ? Container(
+                                        height: 20,
+                                        child: Text(
+                                          "Đăng ký",
+                                          style: TextStyle(color: Colors.white, fontSize: 20),
+                                        ),
                                       )
                                     : state == "0"
                                         ? Center(

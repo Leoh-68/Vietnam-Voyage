@@ -23,9 +23,17 @@ class DiaDanhController extends Controller
 
     public function TimKiem(Request $req)
     {
+        if($req->mode=="Tên địa danh")
+        {
+            $dd = DiaDanh::where('TenDiaDanh', "like", '%' . $req->name . '%')->get();
+            return response()->json($dd, 200);
+        }
+        else
+        {
+            $dd= DiaDanh::where('ViTri', "like", '%' . $req->name . '%')->get();
+            return response()->json($dd, 200);
+        }
 
-        $dd = DiaDanh::where('TenDiaDanh', "like", '%' . $req->name . '%')->get();
-        return response()->json($dd, 200);
     }
     public function LayHinhAnhTheoDiaDanh(Request $req)
     {
@@ -44,8 +52,8 @@ class DiaDanhController extends Controller
 
     function layToaDoTheoID(Request $req)
     {
-
-        $vitri = ToaDo::where('DiaDanhId', $req->id)->first();
+        $dd=DiaDanh::find($req->id);
+        $vitri = ToaDo::find($dd->ViTriId);
         return response()->json($vitri);
     }
     public function luutru(Request $req)
@@ -53,5 +61,95 @@ class DiaDanhController extends Controller
         $data=LuuTru::where('DiaDanhId',$req->id)->get();
         return $data;
     }
-    
+    public function LayTheoVungMien()
+    {
+        # code...
+    }
+    public function ThayAnh(Request $rq)
+    {
+        $tk=TaiKhoan::find($rq->id);
+        if ($rq->has('file')==false) {
+            session()->flash('fail', 'Vui lòng chọn hình ảnh');
+            return redirect()->back();
+        }
+        $size = $rq->file->getSize();
+        $extention = $rq->file->extension();
+        if ($size > 2000000) {
+            session()->flash('fail', 'Kích thướt ảnh phải dưới 2M');
+            return View('Teacher/Post', compact('idclass'));
+        }
+        if (
+            $extention == "jpg" ||
+            $extention == "jpeg" ||
+            $extention == "gif" ||
+            $extention == "tiff" ||
+            $extention == "psd" ||
+            $extention == "png" ||
+            $extention == "jfif" ||
+            $extention == "jpg"
+        ) {
+            $image = $rq->file;
+            $image_name = $image->getClientoriginalName();
+            $image->move(public_path('images'), $image_name);
+            $tk->hinhanh=$image_name;
+            $tk->save();
+        } else {
+            session()->flash('fail', 'Tệp được chọn phải là hình ảnh');
+            return redirect()->back();
+        }
+    }
+    public function LuuAnh(Request $rq)
+    {
+        if ($rq->has('file')==false) {
+            session()->flash('fail', 'Vui lòng chọn hình ảnh');
+            return redirect()->back();
+        }
+        $size = $rq->file->getSize();
+        $extention = $rq->file->extension();
+        if ($size > 2000000) {
+            session()->flash('fail', 'Kích thướt ảnh phải dưới 2M');
+            return View('Teacher/Post', compact('idclass'));
+        }
+        if (
+            $extention == "jpg" ||
+            $extention == "jpeg" ||
+            $extention == "gif" ||
+            $extention == "tiff" ||
+            $extention == "psd" ||
+            $extention == "png" ||
+            $extention == "jfif" ||
+            $extention == "jpg"
+        ) {
+            $image = $rq->file;
+            $image_name = $image->getClientoriginalName();
+            $image->move(public_path('images'), $image_name);
+        } else {
+            session()->flash('fail', 'Tệp được chọn phải là hình ảnh');
+            return redirect()->back();
+        }
+
+    }
+    public function PostShare(Request $req)
+    {
+        $count=0;
+      $share=Share::orderBy('created_at','desc')->where('DiaDanhId',$req->id)->get();
+      foreach($share as $var)
+      {
+          $tk=TaiKhoan::find($var->TaiKhoanId);
+          Arr::add($share[$count], "TaiKhoan", $tk);
+          $like=Share::where([['TaiKhoanId',$req->tkid],['idshare',$var->id],['Liked','1']])->count();
+          if($like==0)
+          {
+            Arr::add($share[$count], "isFavor", "ko");
+          }
+          else
+          {
+            Arr::add($share[$count], "isFavor", "co");
+          }
+          $count+=1;
+      }
+
+      return $share;
+    }
+
 }

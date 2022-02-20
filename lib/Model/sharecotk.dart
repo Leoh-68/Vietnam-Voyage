@@ -1,6 +1,6 @@
 import 'package:template/taikhoan.dart';
 
-class Share {
+class ShareCoAccount {
   int? id;
   String? baiViet;
   String? diaDanhId;
@@ -10,11 +10,12 @@ class Share {
   String? created;
   String? idshare;
   String? isLike;
+  TaiKhoan? tk;
   String? isFavor;
   String? image;
-  Share({this.id, this.baiViet, this.diaDanhId, this.taiKhoanId, this.liked, this.view, this.idshare});
+  ShareCoAccount({this.id, this.baiViet, this.diaDanhId, this.taiKhoanId, this.liked, this.view, this.idshare});
 
-  Share.fromJson(Map<String, dynamic> json) {
+  ShareCoAccount.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     baiViet = json['BaiViet'];
     diaDanhId = json['DiaDanhId'];
@@ -24,8 +25,9 @@ class Share {
     view = json['View'];
     idshare = json['idshare'];
     isLike = json['isFavorite'];
-    isFavor = json['isFavor'];
     image = json['hinhanh'];
+    tk = TaiKhoan.fromJson(json['tai_khoan']);
+    isFavor = json['isFavor'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

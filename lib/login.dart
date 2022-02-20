@@ -17,6 +17,7 @@ class LoginPageState extends State<LoginPage> {
   late TextEditingController _pass;
   bool isLoading = false;
   List<TaiKhoan> TK = [];
+  late TaiKhoan taiKhoan;
   @override
   void initState() {
     super.initState();
@@ -32,9 +33,9 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.username!.contains(username) &&
-          taiK.password!.contains(password)) {
+      if (taiK.username!.contains(username) && taiK.password!.contains(password)) {
         check = true;
+        taiKhoan = taiK;
       }
     }
     return check;
@@ -131,6 +132,7 @@ class LoginPageState extends State<LoginPage> {
                                         context,
                                         PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
                                           return LoadingScreen(
+                                            taiKhoan: taiKhoan,
                                             username: _username.text,
                                             password: _pass.text,
                                           );
