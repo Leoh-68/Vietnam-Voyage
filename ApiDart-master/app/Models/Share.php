@@ -19,10 +19,10 @@ class Share extends Model
     ];
     public function DiaDanh()
     {
-        return $this->belongsTo(DiaDanh::class, 'diadanhid');
+        return $this->belongsTo(DiaDanh::class, 'DiaDanhId');
     }
     public function TaiKhoan()
     {
-        return $this->belongsTo(TaiKhoan::class, 'taikhoanid');
+        return $this->belongsTo(TaiKhoan::class, 'TaiKhoanId');
     }
 }

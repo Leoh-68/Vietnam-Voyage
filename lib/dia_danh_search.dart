@@ -1,5 +1,6 @@
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
+import 'package:template/taikhoan.dart';
 import 'Model/dia_danh.dart';
 import 'Api/api.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,12 @@ import 'package:template/ApiFolder/dia_danh_show.dart';
 
 class Search extends StatefulWidget {
   final String name;
-  const Search({Key? key, required this.name}) : super(key: key);
+  final String username;
+  final String password;
+  final TaiKhoan account;
+  final String mode;
+  const Search({Key? key, required this.mode, required this.account, required this.name, required this.username, required this.password})
+      : super(key: key);
 
   @override
   State<Search> createState() => _SearchState();
@@ -18,12 +24,19 @@ class _SearchState extends State<Search> {
   bool typing = false;
   String text = "";
   String location = "3";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var dvsize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Ahihi"), actions: [
+        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Tìm kiếm "), actions: [
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -47,7 +60,7 @@ class _SearchState extends State<Search> {
                         backgroundImage: AssetImage("images/2.jpg"),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        widget.account.hoTen.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -62,7 +75,7 @@ class _SearchState extends State<Search> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(username: widget.username, password: widget.password);
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -106,7 +119,7 @@ class _SearchState extends State<Search> {
         body: ListView(
           children: [
             FutureBuilder<List<DiaDanh>>(
-                future: api_Finds_DiaDanh(widget.name),
+                future: api_Finds_DiaDanh(widget.name, widget.mode),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -133,8 +146,9 @@ class _SearchState extends State<Search> {
                                                   width: dvsize.width - 32,
                                                   child: ClipRRect(
                                                       borderRadius: BorderRadius.circular(10),
-                                                      child:
-                                                          Image(image: AssetImage('images/' + snapshot.data![index].hinhAnh!), fit: BoxFit.cover))),
+                                                      child: Image(
+                                                          image: NetworkImage('http://10.0.2.2:8001/images/' + snapshot.data![index].hinhAnh!),
+                                                          fit: BoxFit.cover))),
                                               onPressed: () {},
                                             )
                                           ],
@@ -168,11 +182,14 @@ class _SearchState extends State<Search> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (contex) => Detail(
+                                                account: widget.account,
+                                                username: widget.username,
+                                                password: widget.password,
                                                 mota: snapshot.data![index].moTa.toString(),
                                                 id: snapshot.data![index].id.toString(),
                                                 name: snapshot.data![index].tenDiaDanh.toString(),
                                                 location: snapshot.data![index].viTri!,
-                                                image: location)));
+                                                image: snapshot.data![index].hinhAnh!)));
                                   },
                                 )
                               ],

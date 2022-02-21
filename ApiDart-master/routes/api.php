@@ -3,8 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use  App\Http\Controllers\DiaDanhController;
+use App\Http\Controllers\LuotLikeController;
 use  App\Http\Controllers\ShareController;
 use  App\Http\Controllers\TaiKhoanController;
+use App\Http\Controllers\ViTriController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('DiaDanh',[DiaDanhController::class,'LayDiaDanh']);
-Route::get('TaiKhoan',[DiaDanhController::class,'GetTaiKhoan']);
+Route::post('TaiKhoan',[DiaDanhController::class,'GetTaiKhoan']);
 
 Route::post('TimKiem',[DiaDanhController::class,'TimKiem']);
 
@@ -46,3 +49,32 @@ Route::get('relikePost', [ShareController::class,'relikePost']);
 Route::get('unlikePost', [ShareController::class,'unlikePost']);
 
 Route::get('reunlikePost', [ShareController::class,'reunlikePost']);
+
+Route::post('accountinfo', [TaiKhoanController::class,'layTaiKhoan']);
+Route::post('accountinfoid', [TaiKhoanController::class,'layTaiKhoanid']);
+Route::get('ViTri',[DiaDanhController::class,'layToaDoTheoID']);
+
+Route::post('dangky', [TaiKhoanController::class,'register']);
+
+Route::get('countlike', [ShareController::class,'countlike']);
+
+Route::get('countunlike', [ShareController::class,'countunlike']);
+
+Route::get('liked', [ShareController::class,'liked']);
+Route::get('unliked', [ShareController::class,'unliked']);
+
+Route::post('checkTrung',[TaiKhoanController::class,'checkTrung']);
+
+Route::get('luutru',[DiaDanhController::class,'luutru']);
+
+Route::get('top',[LuotLikeController::class,'laytop5']);
+
+Route::post('ThayAnh',[DiaDanhController::class,'ThayAnh']);
+
+Route::post('LuuAnh',[DiaDanhController::class,'LuuAnh']);
+
+Route::get('PostSharee',[DiaDanhController::class,'PostSharee']);
+
+Route::get('TheoNhuCau',[DiaDanhController::class,'TheoNhuCau']);
+///kt
+Route::get('logkt',[ViTriController::class,'logkt']);

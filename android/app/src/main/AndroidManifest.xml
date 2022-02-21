@@ -2,8 +2,9 @@
     package="com.example.template">
    <application
         android:label="template"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
-        <activity
+        <activity 
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

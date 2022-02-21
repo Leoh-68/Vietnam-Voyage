@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use  App\Http\Controllers\TaiKhoanController;
+use  App\Http\Controllers\DiaDanhController;
 use App\Http\Controllers\DangNhapController;
 use App\Http\Controllers\AdminController;
 
@@ -16,9 +18,15 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('/');
-Route::get('/login', [DangNhapController::class,'xulyTaiKhoan'])->name('login');
-Route::post('/login', [DangNhapController::class,'xuLyDangNhap'])->name('xl-dang-nhap');
+});
+
+
+Route::post('/',[DiaDanhController::class,'ThemDiaDanh'])->name("add");
+
+
+Route::get('/image',[TaiKhoanController::class,'image'])->name("image");
+Route::get('/', [DangNhapController::class,'xulyTaiKhoan'])->name('login');
+Route::post('/', [DangNhapController::class,'xuLyDangNhap'])->name('xl-dang-nhap');
 Route::get('/Admin/DiaDanh', [AdminController::class, 'DSDiaDanh'])->name('DiaDanh');
 Route::get('/Admin/ThemDiaDanh', [AdminController::class, 'ThemDiaDanh'])->name('ThemDiaDanh');
 Route::post('/Admin/ThemDiaDanh', [AdminController::class, 'xlThemDiaDanh'])->name('XLThemDiaDanh');

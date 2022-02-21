@@ -1,26 +1,55 @@
 import 'package:template/Api/api.dart';
+import 'package:template/ApiFolder/share_detail.dart';
+import 'package:template/Model/luot_share.dart';
+import 'package:template/Model/sharecotk.dart';
+import 'package:template/api.dart';
 import 'package:template/login.dart';
 import 'package:template/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:template/Model/share.dart';
+import 'package:template/profileclick.dart';
+import 'package:template/taikhoan.dart';
+
 class Post extends StatefulWidget {
-  const Post({
-    Key? key,
-  }) : super(key: key);
+  final String username;
+  final String password;
+  final TaiKhoan account;
+  const Post({Key? key, required this.username, required this.password, required this.account}) : super(key: key);
   @override
   State<Post> createState() => _PostState();
 }
+
 class _PostState extends State<Post> {
+  LuotShare ls = new LuotShare();
+  String aaa = "";
   int countter = 2;
   bool typing = false;
   String text = "";
   String location = "3";
-  String like = "0";
+  late String like;
+  late String view;
   String unlike = "0";
-  bool liked = false;
-  bool unliked = false;
+  TaiKhoan user1 = new TaiKhoan();
   Color likecolor = Colors.black;
   Color unlikecolor = Colors.black;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  String buildString(String word) {
+    final arr = word.split('');
+    String a = "";
+    if (arr.length > 100) {
+      for (int i = 0; i < 100; i++) {
+        a = a + "" + arr[i];
+      }
+      return a;
+    } else {
+      return arr.join("");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var dvsize = MediaQuery.of(context).size;
@@ -30,9 +59,7 @@ class _PostState extends State<Post> {
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              setState(() {
-                Navigator.pop(context);
-              });
+              Navigator.pop(context);
             },
           )
         ]),
@@ -45,12 +72,12 @@ class _PostState extends State<Post> {
                 child: DrawerHeader(
                   decoration: BoxDecoration(color: Color.fromRGBO(154, 175, 65, 1)),
                   child: Row(
-                    children: const [
+                    children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage("images/2.jpg"),
+                        backgroundImage: NetworkImage('http://10.0.2.2:8001/images/' + user1.image.toString()),
                       ),
                       Text(
-                        "   Trần Phước Khánh",
+                        widget.account.hoTen.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     ],
@@ -65,7 +92,7 @@ class _PostState extends State<Post> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const Profile();
+                        return Profile(username: widget.username, password: widget.password);
                       },
                       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -106,120 +133,128 @@ class _PostState extends State<Post> {
             ],
           ),
         ),
-        body: FutureBuilder<List<Share>>(
-            future: api_GetShareHome(),
+        body: FutureBuilder<List<ShareCoAccount>>(
+            future: api_GetShareHome(widget.account.id.toString()),
             builder: (contex, snapshot) {
               return snapshot.hasData
                   ? ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, int index) {
-                        like = snapshot.data![index].liked.toString();
-                        unlike = snapshot.data![index].unliked.toString();
-                        return snapshot.hasData
+                        return snapshot.data![index].idshare == "0"
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   children: [
-                                    const ListTile(
-                                        title: Text("Trần Phước Khánh", style: TextStyle(fontSize: 20)),
+                                    ListTile(
+                                        title: Text(snapshot.data![index].tk!.hoTen.toString(), style: TextStyle(fontSize: 20)),
                                         subtitle: Text(
-                                          "11/11/2001",
-                                          style: TextStyle(fontSize: 16),
+                                          DateTime.parse(snapshot.data![index].created.toString()).toString(),
+                                          style: const TextStyle(fontSize: 16),
                                         ),
                                         leading: SizedBox(
                                           height: 50,
                                           width: 50,
-                                          child: CircleAvatar(
-                                            backgroundImage: AssetImage('images/3.jpg'),
-                                          ),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+                                                      return ProfileClick(
+                                                        username: widget.username,
+                                                        password: widget.password,
+                                                        idAccount: snapshot.data![index].tk!.id.toString(),
+                                                      );
+                                                    },
+                                                    transitionsBuilder: (BuildContext context, Animation<double> animation,
+                                                        Animation<double> secondaryAnimation, Widget child) {
+                                                      return SlideTransition(
+                                                        position: Tween<Offset>(
+                                                          begin: const Offset(1.0, 0.0),
+                                                          end: Offset.zero,
+                                                        ).animate(animation),
+                                                        child: child,
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundImage:
+                                                    NetworkImage('http://10.0.2.2:8001/images/' + snapshot.data![index].tk!.image.toString()),
+                                              )),
                                         )),
                                     Padding(
                                       padding: EdgeInsets.only(left: 10, right: 10),
                                       child: Align(
                                         alignment: Alignment.topLeft,
-                                        child: Text(
-                                          snapshot.data![index].baiViet.toString(),
-                                          style: TextStyle(fontSize: 20),
-                                        ),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => PostShareDetail(
+                                                            share: snapshot.data![index],
+                                                            username: widget.username,
+                                                            password: widget.password,
+                                                            account: widget.account,
+                                                          )));
+                                            },
+                                            child: Text(
+                                              buildString(snapshot.data![index].baiViet.toString()),
+                                              style: TextStyle(fontSize: 20, color: Colors.black),
+                                            )),
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: SizedBox(
-                                        child: Image(image: AssetImage('images/1.jpg')),
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  if (unliked == false) {
-                                                    if (liked == false) {
-                                                      setState(() {
-                                                        api_Like(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                                        liked = true;
-                                                        likecolor = Colors.red;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        api_reLike(snapshot.data![index].id.toString()).then((value) => {like = value});
-                                                        liked = false;
-                                                        likecolor = Colors.black;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    null;
-                                                  }
-                                                },
-                                                icon: Icon(
-                                                  Icons.favorite,
-                                                  color: likecolor,
-                                                )),
-                                            Text(like)
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  if (liked == false) {
-                                                    if (unliked == false) {
-                                                      setState(() {
-                                                        api_UnLike(snapshot.data![index].id.toString()).then((value) => {unlike = value});
-                                                        unliked = true;
-                                                        unlikecolor = Colors.red;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        api_reUnLike(snapshot.data![index].id.toString()).then((value) => {
-                                                              unlike = value,
-                                                            });
-                                                        unliked = false;
-                                                        unlikecolor = Colors.black;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    null;
-                                                  }
-                                                },
-                                                icon: Icon(Icons.thumb_down_alt, color: unlikecolor)),
-                                            Text(unlike)
-                                          ],
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            children: const [Icon(Icons.remove_red_eye), Text("100")],
-                                          ),
-                                          alignment: Alignment.topRight,
-                                        )
-                                      ],
-                                    )
+                                    snapshot.data![index].image != ""
+                                        ? Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: SizedBox(
+                                              child:
+                                                  Image(image: NetworkImage('http://10.0.2.2:8001/images/' + snapshot.data![index].image.toString())),
+                                            ),
+                                          )
+                                        : Container(),
+                                    FutureBuilder<String>(
+                                        future: api_countlike(snapshot.data![index].diaDanhId.toString(), snapshot.data![index].id.toString()),
+                                        builder: (contex, snapshot3) {
+                                          snapshot3.data == null ? Text("Loading........") : aaa = snapshot3.data!;
+                                          return Row(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        if (snapshot.data![index].isFavor.toString() == "co") {
+                                                          api_reLike(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                                            setState(() {});
+                                                          });
+                                                        } else {
+                                                          api_Like(snapshot.data![index].id.toString(), widget.account.id.toString()).then((value) {
+                                                            setState(() {});
+                                                          });
+                                                        }
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.favorite,
+                                                        color: snapshot.data![index].isFavor.toString() == "co" ? Colors.red : Colors.black,
+                                                      )),
+                                                  aaa != null ? Text(aaa) : CircularProgressIndicator()
+                                                ],
+                                              ),
+                                              Container(
+                                                child: Row(
+                                                  children: [const Icon(Icons.remove_red_eye), Text(snapshot.data![index].view.toString())],
+                                                ),
+                                                alignment: Alignment.topRight,
+                                              )
+                                            ],
+                                          );
+                                        })
                                   ],
                                 ),
                               )
-                            : const CircularProgressIndicator();
+                            : Container();
                       })
                   : const Center(
                       child: CircularProgressIndicator(),

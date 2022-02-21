@@ -1,7 +1,9 @@
+import 'package:flutter/painting.dart';
 import 'package:template/Api/api.dart';
 import 'package:template/error.dart';
 import 'package:template/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:template/register.dart';
 import 'package:template/taikhoan.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,11 +17,12 @@ class LoginPageState extends State<LoginPage> {
   late TextEditingController _pass;
   bool isLoading = false;
   List<TaiKhoan> TK = [];
+  late TaiKhoan taiKhoan;
   @override
   void initState() {
     super.initState();
-    _username = TextEditingController();
-    _pass = TextEditingController();
+    _username = TextEditingController(text: "admin");
+    _pass = TextEditingController(text: "admin");
     api_lay_ds_tai_khoan().then((value) {
       setState(() {
         TK = value;
@@ -30,9 +33,9 @@ class LoginPageState extends State<LoginPage> {
   bool LoginCheck(String username, String password) {
     bool check = false;
     for (TaiKhoan taiK in TK) {
-      if (taiK.username!.contains(username) &&
-          taiK.password!.contains(password)) {
+      if (taiK.username!.contains(username) && taiK.password!.contains(password)) {
         check = true;
+        taiKhoan = taiK;
       }
     }
     return check;
@@ -90,6 +93,17 @@ class LoginPageState extends State<LoginPage> {
                               labelText: 'Mật khẩu',
                               labelStyle: TextStyle(color: Colors.black)),
                         ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
+                            },
+                            child: Align(
+                              child: Text(
+                                "Đăng ký",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              alignment: Alignment.topLeft,
+                            ))
                       ],
                     ),
                   ),
@@ -116,35 +130,12 @@ class LoginPageState extends State<LoginPage> {
                                     });
                                     Navigator.pushAndRemoveUntil(
                                         context,
-                                        PageRouteBuilder(pageBuilder:
-                                            (BuildContext context,
-                                                Animation animation,
-                                                Animation secondaryAnimation) {
-                                          return const LoadingScreen(
+                                        PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+                                          return LoadingScreen(
+                                            taiKhoan: taiKhoan,
+                                            username: _username.text,
+                                            password: _pass.text,
                                           );
-                                        }, transitionsBuilder:
-                                            (BuildContext context,
-                                                Animation<double> animation,
-                                                Animation<double>
-                                                    secondaryAnimation,
-                                                Widget child) {
-                                          return SlideTransition(
-                                            position: Tween<Offset>(
-                                              begin: const Offset(1.0, 0.0),
-                                              end: Offset.zero,
-                                            ).animate(animation),
-                                            child: child,
-                                          );
-                                        }),
-                                        (Route route) => false);
-                                  } else {
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        PageRouteBuilder(pageBuilder:
-                                            (BuildContext context,
-                                                Animation animation,
-                                                Animation secondaryAnimation) {
-                                          return const ErrorPage();
                                         }, transitionsBuilder:
                                             (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                                           return SlideTransition(

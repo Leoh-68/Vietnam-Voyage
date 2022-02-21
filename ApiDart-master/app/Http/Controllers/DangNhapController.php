@@ -34,9 +34,9 @@ class DangNhapController extends Controller
     {
         $dstaikhoan = TaiKhoan::all();
         foreach($dstaikhoan as $tk){
-            if ($tk->username==$request->username&&$tk->password==$request->password) {
+            if ($tk->UserName==$request->username&&$tk->Password==$request->password) {
                 session(['username' => $request->username]);
-                session(['password' => $request->username]);
+                session(['password' => $request->password]);
                 if($tk->username=="admin") {
                     return redirect()->route('DiaDanh');
                 }

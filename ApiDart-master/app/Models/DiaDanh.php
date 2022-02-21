@@ -18,6 +18,6 @@ class DiaDanh extends Model
 
   public function Share()
     {
-        return $this->hasMany(Share::class, 'diadanhId');
+        return $this->hasMany(Share::class, 'DiaDanhId');
     }
 }

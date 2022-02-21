@@ -12,6 +12,6 @@ class TaiKhoan extends Model
 
     public function Share()
     {
-        return $this->hasMany(Share::class, 'taikhoanid');
+        return $this->hasMany(Share::class, 'TaiKhoanId');
     }
 }

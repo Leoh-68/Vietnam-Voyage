@@ -2,34 +2,39 @@ import 'package:template/home_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:template/taikhoan.dart';
+
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({Key? key}) : super(key: key);
+  final String username;
+  final String password;
+  final TaiKhoan taiKhoan;
+  const LoadingScreen({
+    Key? key,
+    required this.password,
+    required this.username, required this.taiKhoan,
+  }) : super(key: key);
   @override
   State<LoadingScreen> createState() => _LoadingScreen();
 }
 
-class _LoadingScreen extends State<LoadingScreen>
-    with SingleTickerProviderStateMixin {
+class _LoadingScreen extends State<LoadingScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
     Future.delayed(
       const Duration(seconds: 3),
       () => Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation animation,
-                Animation secondaryAnimation) {
-              return MyHomePage();
+            pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+              return MyHomePage(
+                username: widget.username,
+                password: widget.password, taiKhoan: widget.taiKhoan,
+              );
             },
-            transitionsBuilder: (BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child) {
+            transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(1.0, 0.0),
@@ -65,9 +70,7 @@ class _LoadingScreen extends State<LoadingScreen>
                   const Padding(padding: EdgeInsets.all(50)),
                   Container(
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage("images/VV_icon.png")),
+                      image: DecorationImage(fit: BoxFit.cover, image: AssetImage("images/VV_icon.png")),
                       border: Border.all(color: Colors.white, width: 10),
                       borderRadius: BorderRadius.all(Radius.circular(250)),
                     ),

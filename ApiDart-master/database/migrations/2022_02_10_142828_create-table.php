@@ -15,29 +15,36 @@ class CreateTable extends Migration
     {
         Schema::create('taikhoan', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->string('password');
-            $table->string('hoten');
-            $table->string('sdt',10)->default('0');
-            $table->string('email');
+            $table->string('UserName');
+            $table->string('Password');
+            $table->string('HoTen');
+            $table->string('hinhanh');
+            $table->string('SDT',10)->default('0');
+            $table->string('Email');
             $table->timestamps();
             $table->SoftDeletes();
         });
         Schema::create('vitri', function (Blueprint $table) {
             $table->id();
-            $table->double('kinhdo');
-            $table->double('vido');
+            $table->double('KinhDo');
+            $table->double('ViDo');
             $table->timestamps();
             $table->SoftDeletes();
         });
         Schema::create('diadanh', function (Blueprint $table) {
             $table->id();
-            $table->string('tendiadanh');
-            $table->integer('vitriid');
-            $table->foreign('vitriid')->references('id')->on('vitri');
-            $table->integer()->default('0');
-            $table->string('vungmien');
-            $table->string('noidung');
+            $table->string('TenDiaDanh');
+            $table->string('ViTri');
+            $table->string('ViTriId');
+            $table->string('MoTa');
+            $table->String('NhuCauId');
+            $table->string('HinhAnhId');
+            $table->timestamps();
+            $table->SoftDeletes();
+        });
+        Schema::create('nhucau', function (Blueprint $table) {
+            $table->id();
+            $table->string('LoaiNhuCau');
             $table->timestamps();
             $table->SoftDeletes();
         });
@@ -51,23 +58,36 @@ class CreateTable extends Migration
         });
         Schema::create('chiase', function (Blueprint $table) {
             $table->id();
-            $table->string('noidung');
-            $table->integer('diadanhid');
-            $table->foreign('diadanhid')->references('id')->on('diadanh');
-            $table->integer('taikhoanid');
-            $table->foreign('taikhoanid')->references('id')->on('taikhoan');
-            $table->integer('luotxem')->default('0');
-            $table->boolean('liked');
+            $table->string('BaiViet');
+            $table->string('DiaDanhId');
+            $table->foreign('DiaDanhId')->references('id')->on('diadanh');
+            $table->string('TaiKhoanId');
+            $table->foreign('TaiKhoanId')->references('id')->on('taikhoan');
+            $table->string('View')->default('0');
+            $table->string('Liked');
+            $table->string('hinhanh');
+            $table->string('idshare');
             $table->timestamps();
             $table->SoftDeletes();
         });
         Schema::create('diadiemluutru', function (Blueprint $table) {
             $table->id();
-            $table->integer('diadanhid');
-            $table->foreign('diadanhid')->references('id')->on('diadanh');
-            $table->string('tenluutru');
-            $table->string('diachi');
+            $table->string('DiaDanhId');
+            $table->foreign('DiaDanhId')->references('id')->on('diadanh');
+            $table->string('TenLuuTru');
+            $table->string('DiaChi');
             $table->string('SDT',10)->default('0');
+            $table->timestamps();
+            $table->SoftDeletes();
+        });
+        Schema::create('luotlike', function (Blueprint $table) {
+            $table->id();
+            $table->integer('DiaDanhId');
+            $table->foreign('DiaDanhId')->references('id')->on('diadanh');
+            $table->integer('PostId');
+            $table->foreign('PostId')->references('id')->on('chiase');
+            $table->string('Liked');
+            $table->string('View');
             $table->timestamps();
             $table->SoftDeletes();
         });
