@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class Sharea extends StatefulWidget {
   final String id;
   final String idaccount;
-  Sharea({Key? key, required this.id, required this.idaccount}) : super(key: key);
+  const Sharea({Key? key, required this.id, required this.idaccount})
+      : super(key: key);
   @override
   State<Sharea> createState() => _ShareaState();
 }
@@ -35,22 +36,26 @@ class _ShareaState extends State<Sharea> {
     var dvsize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(backgroundColor: const Color.fromRGBO(154, 175, 65, 1), title: Text("Share"), actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ]),
+        appBar: AppBar(
+            backgroundColor: const Color.fromRGBO(154, 175, 65, 1),
+            title: const Text("Share"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ]),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              Container(
+              SizedBox(
                 height: 95,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(color: Color.fromRGBO(154, 175, 65, 1)),
+                child: const DrawerHeader(
+                  decoration:
+                      BoxDecoration(color: Color.fromRGBO(154, 175, 65, 1)),
                   child: Row(
                     children: [
                       CircleAvatar(
@@ -65,16 +70,20 @@ class _ShareaState extends State<Sharea> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.info),
+                leading: const Icon(Icons.info),
                 title: const Text('Thông tin người dùng'),
                 onTap: () {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+                      pageBuilder: (BuildContext context, Animation animation,
+                          Animation secondaryAnimation) {
                         return const Profile();
                       },
-                      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+                      transitionsBuilder: (BuildContext context,
+                          Animation<double> animation,
+                          Animation<double> secondaryAnimation,
+                          Widget child) {
                         return SlideTransition(
                           position: Tween<Offset>(
                             begin: const Offset(1.0, 0.0),
@@ -88,16 +97,20 @@ class _ShareaState extends State<Sharea> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.logout),
+                leading: const Icon(Icons.logout),
                 title: const Text('Đăng xuất'),
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                          return LoginPage();
+                        pageBuilder: (BuildContext context, Animation animation,
+                            Animation secondaryAnimation) {
+                          return const LoginPage();
                         },
-                        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+                        transitionsBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                            Widget child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0),
@@ -118,14 +131,15 @@ class _ShareaState extends State<Sharea> {
             Card(
                 color: Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: _controller,
                     maxLines: 8,
-                    decoration: InputDecoration.collapsed(hintText: "Enter your text here"),
+                    decoration: const InputDecoration.collapsed(
+                        hintText: "Enter your text here"),
                   ),
                 )),
-            Text(
+            const Text(
               "Đánh giá của bạn",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
@@ -144,7 +158,8 @@ class _ShareaState extends State<Sharea> {
                     danhGia = newValue!;
                   });
                 },
-                items: <String>['Tốt', 'Trung bình', 'Kém', 'Không nên'].map<DropdownMenuItem<String>>((String value) {
+                items: <String>['Tốt', 'Trung bình', 'Kém', 'Không nên']
+                    .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -152,16 +167,17 @@ class _ShareaState extends State<Sharea> {
                 }).toList(),
               ),
             ),
-            FlatButton(
+            TextButton(
                 onPressed: () {
                   setState(() {
-                    api_Post(_controller.text, danhGia, widget.id, "1").then((value) {
+                    api_Post(_controller.text, danhGia, widget.id, "1")
+                        .then((value) {
                       result = value;
                     });
                     _controller.clear();
                   });
                 },
-                child: Text("Submit")),
+                child: const Text("Submit")),
             Text("Trạng thái share: $result")
           ],
         ));

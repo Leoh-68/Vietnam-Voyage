@@ -28,7 +28,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   bool LoginCheck(String username, String password) {
-    bool check = false;
+    bool check = true;
     for (TaiKhoan taiK in TK) {
       if (taiK.username!.contains(username) &&
           taiK.password!.contains(password)) {
@@ -63,9 +63,9 @@ class LoginPageState extends State<LoginPage> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            image: DecorationImage(fit: BoxFit.cover, image: AssetImage("images/VV_icon.png")),
+                            image: const DecorationImage(fit: BoxFit.cover, image: AssetImage("images/VV_icon.png")),
                             border: Border.all(color: Colors.white, width: 10),
-                            borderRadius: BorderRadius.all(Radius.circular(250)),
+                            borderRadius: const BorderRadius.all(Radius.circular(250)),
                           ),
                           height: 250,
                           width: 250,
